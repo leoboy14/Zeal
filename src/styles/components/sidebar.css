@@ -1,0 +1,295 @@
+/* Page Sections (Formerly Sidebar) */
+.page-section {
+    padding: 5rem 2rem;
+    background: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-section:last-of-type {
+    border-bottom: none;
+}
+
+.page-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* About Section */
+.about-section {
+    background: var(--bg-card); /* Alternating background */
+}
+
+.about-content {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.profile-image:hover img {
+    transform: scale(1.05);
+}
+
+.about-text-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.about-text {
+    font-size: 1.1rem;
+    color: var(--text-white);
+    line-height: 1.8;
+}
+
+.about-text-secondary {
+    font-size: 1rem;
+    color: var(--text-gray);
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* Skills Section */
+.skills-section {
+    background: var(--bg-dark);
+}
+
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.skill-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+}
+
+.skill-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 2rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.skill-item:hover .skill-icon {
+    box-shadow: 0 15px 30px rgba(255, 107, 53, 0.2);
+}
+
+.skill-icon.premiere {
+    background: linear-gradient(135deg, #2A0049 0%, #470076 100%);
+    color: #EA77FF;
+}
+
+.skill-icon.after-effects {
+    background: linear-gradient(135deg, #00005B 0%, #1F0066 100%);
+    color: #D291FF;
+}
+
+.skill-icon.davinci {
+    background: linear-gradient(135deg, #FF4500 0%, #FF6B35 100%);
+    color: white;
+}
+
+.skill-icon.photoshop {
+    background: linear-gradient(135deg, #001e36 0%, #31a8ff 100%);
+    color: #31a8ff;
+}
+
+.skill-icon.sound {
+    background: linear-gradient(135deg, #111 0%, #333 100%);
+    color: #FF6B35;
+}
+
+.skill-icon.color {
+    background: linear-gradient(135deg, #222 0%, #444 100%);
+    color: #F7931E;
+}
+
+.skill-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.skill-name {
+    font-size: 0.9rem;
+    color: var(--text-light-gray);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Clients Section */
+.clients-section {
+    background: var(--bg-card);
+}
+
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.client-logo {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.client-logo:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--primary-orange);
+    transform: scale(1.05);
+}
+
+.client-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    color: var(--text-gray);
+    transition: color 0.3s ease;
+}
+
+.client-logo:hover .client-text {
+    color: var(--text-white);
+}
+
+.apple-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--text-gray);
+    transition: color 0.3s ease;
+}
+
+.client-logo:hover .apple-icon {
+    color: var(--text-white);
+}
+
+.audi-icon {
+    width: 100px;
+    height: 40px;
+    color: var(--text-gray);
+    transition: color 0.3s ease;
+}
+
+.client-logo:hover .audi-icon {
+    color: var(--text-white);
+}
+
+/* Main Footer */
+.main-footer {
+    background: #050505;
+    padding: 4rem 2rem 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    color: var(--text-white);
+    letter-spacing: 0.1em;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.contact-email {
+    font-size: 1rem;
+    color: var(--text-gray);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-email:hover {
+    color: var(--primary-orange);
+}
+
+.copyright {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid #222;
+    text-align: center;
+    color: #555;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .footer-links {
+        align-items: center;
+    }
+}
+
+
+
+

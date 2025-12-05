@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-orange: #FF6B35;
+    --secondary-orange: #F7931E;
+    --bg-dark: #0a0a0a;
+    --bg-card: #141414;
+    --bg-sidebar: #111111;
+    --text-white: #ffffff;
+    --text-gray: #9a9a9a;
+    --text-light-gray: #666666;
+    --border-color: #2a2a2a;
+  }
+
+  * {
+    border-color: var(--border-color);
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: 'Montserrat', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-orange);
+  }
+
+  /* Focus visible styles */
+  *:focus-visible {
+    outline: 2px solid var(--primary-orange);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,110 @@
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), transparent);
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 50px;
+    height: auto;
+    max-height: 50px;
+}
+
+.logo-icon.small {
+    width: 28px;
+    height: auto;
+}
+
+.logo-image {
+    width: 100%;
+    height: auto;
+    max-height: 50px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.logo-text.small {
+    font-size: 0.75rem;
+}
+
+.logo-zeal {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: var(--text-white);
+}
+
+.logo-highlights {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.875rem;
+    letter-spacing: 0.15em;
+    color: var(--primary-orange);
+}
+
+.logo-text.small .logo-zeal {
+    font-size: 1rem;
+}
+
+.logo-text.small .logo-highlights {
+    font-size: 0.625rem;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--text-gray);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--text-white);
+}
+
+.nav-cta {
+    padding: 0.625rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--text-gray);
+    border-radius: 50px;
+    color: var(--text-white);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-cta:hover {
+    background: var(--text-white);
+    color: var(--bg-dark);
+}
