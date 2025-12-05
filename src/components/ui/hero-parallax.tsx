@@ -104,11 +104,12 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-10 md:py-20 px-4 w-full left-0 top-0 z-50">
-      <h1 className="text-4xl md:text-7xl font-bold text-white font-bebas tracking-wider">
-        BRINGING STORIES <br /> TO LIFE THROUGH EDITING
+    <div className="max-w-7xl relative mx-auto py-10 md:py-20 px-4 w-full left-0 top-0 z-50 pointer-events-none">
+      <h1 className="text-4xl md:text-7xl font-bold text-white font-bebas tracking-wider leading-none">
+        BRINGING <span className="text-primary-orange">STORIES</span> <br />
+        TO LIFE THROUGH <span className="text-primary-orange">EDITING</span>
       </h1>
-      <p className="max-w-2xl text-sm md:text-xl mt-4 md:mt-8 text-neutral-200 font-montserrat font-light">
+      <p className="max-w-2xl text-base md:text-xl mt-6 text-neutral-200 font-montserrat font-light leading-relaxed">
         Dynamic cuts, compelling narratives, and high-impact visuals.
         We transform raw footage into polished masterpieces that captivate audiences.
       </p>
