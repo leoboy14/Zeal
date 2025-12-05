@@ -14,42 +14,42 @@ const projects: Project[] = [
     title: 'THE DREAM WEDDING',
     category: 'Wedding Films',
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-bride-and-groom-kissing-5340/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     link: '#'
   },
   {
     title: 'LUXURY VILLA TOUR',
     category: 'Real Estate',
     thumbnail: 'https://images.unsplash.com/photo-1600596542815-9ad4dc7553e3?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-luxury-house-interior-5341/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
     link: '#'
   },
   {
     title: 'TRAVEL VLOG: ICELAND',
     category: 'YouTube Content',
     thumbnail: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-walking-through-snowy-mountains-5337/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
     link: '#'
   },
   {
     title: 'FITNESS BRAND REVEAL',
     category: 'Commercial',
     thumbnail: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-gym-workout-5342/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
     link: '#'
   },
   {
     title: 'MUSIC VIDEO - INDIE VIBES',
     category: 'Music Video',
     thumbnail: 'https://images.unsplash.com/photo-1514525253440-b393452e3383?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-band-playing-music-5334/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     link: '#'
   },
   {
     title: 'TECH UNBOXING',
     category: 'Social Media',
     thumbnail: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=800&q=80',
-    video: 'https://cdn.coverr.co/videos/coverr-typing-on-computer-5339/1080p.mp4',
+    video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
     link: '#'
   }
 ]
