@@ -27,7 +27,7 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header className="fixed top-6 inset-x-0 w-[95%] max-w-4xl mx-auto z-50 px-4">
+    <header className="fixed top-6 inset-x-0 w-[95%] max-w-4xl mx-auto z-[100] px-4">
       <div
         className={`w-full rounded-full border border-white/10 bg-black/60 backdrop-blur-md shadow-2xl px-6 py-3 flex items-center justify-between transition-all duration-300 relative ${scrolled ? 'bg-black/80 border-white/20' : ''
           }`}
