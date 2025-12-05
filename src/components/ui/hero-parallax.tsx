@@ -104,7 +104,7 @@ export const HeroParallax = ({
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto pt-24 md:pt-48 px-4 w-full left-0 top-0 z-50 pointer-events-none">
+    <div className="max-w-7xl relative mx-auto h-screen flex flex-col justify-center px-4 w-full left-0 top-0 z-50 pointer-events-none">
       <h1 className="text-4xl md:text-7xl font-bold text-white font-bebas tracking-wider leading-none">
         BRINGING <span className="text-primary-orange">STORIES</span> <br />
         TO LIFE THROUGH <span className="text-primary-orange">EDITING</span>
