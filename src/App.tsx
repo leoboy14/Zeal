@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
-import HeroParallaxDemo from './components/hero-parallax-demo'
-import FeaturedWork from './components/FeaturedWork'
+import Home from './pages/Home'
 import Services from './components/Services'
 import About from './components/About'
 import LoadingScreen from './components/LoadingScreen'
+
+function AppContent() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,14 +38,12 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background-dark">
-      <LoadingScreen isLoading={isLoading} />
-      <Header />
-      <HeroParallaxDemo />
-      <FeaturedWork />
-      <Services />
-      <About />
-    </div>
+    <Router>
+      <div className="min-h-screen bg-background-dark">
+        <LoadingScreen isLoading={isLoading} />
+        {!isLoading && <AppContent />}
+      </div>
+    </Router>
   )
 }
 

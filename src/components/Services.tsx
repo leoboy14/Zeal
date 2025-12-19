@@ -31,7 +31,7 @@ const Services: React.FC = () => {
   ]
 
   return (
-    <section id="services" className="py-20 px-6 md:px-10 bg-background-dark relative z-20">
+    <section id="services" className="pt-32 pb-20 px-6 md:px-10 bg-background-dark relative z-20">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

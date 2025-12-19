@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import logo from '../assets/logo.png'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,16 +18,16 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollToSection = (sectionId: string) => {
+  const handleNavigation = (path: string) => {
     setMobileMenuOpen(false)
-    const element = document.getElementById(sectionId)
-    if (element) {
-      // Small timeout to allow menu close animation
-      setTimeout(() => {
-        element.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+    if (location.pathname !== path) {
+       navigate(path)
+    } else {
+       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
+
+  const isActive = (path: string) => location.pathname === path
 
   return (
     <header className="fixed top-6 inset-x-0 w-[95%] max-w-4xl mx-auto z-[100] px-4">
@@ -43,43 +46,43 @@ const Header: React.FC = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <button
-            onClick={() => scrollToSection('work')}
-            className="text-text-white text-sm font-medium tracking-wider hover:text-primary-orange transition-colors font-bebas"
+            onClick={() => handleNavigation('/')}
+            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             WORK
           </button>
           <button
-            onClick={() => scrollToSection('about')}
-            className="text-text-white text-sm font-medium tracking-wider hover:text-primary-orange transition-colors font-bebas"
+            onClick={() => handleNavigation('/about')}
+            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/about') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             ABOUT
           </button>
           <button
-            onClick={() => scrollToSection('services')}
-            className="text-text-white text-sm font-medium tracking-wider hover:text-primary-orange transition-colors font-bebas"
+            onClick={() => handleNavigation('/services')}
+            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/services') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             SERVICES
           </button>
-          <button
-            onClick={() => scrollToSection('contact')}
+          <a
+            href="mailto:contact@zealhighlights.com"
             className="text-text-white text-sm font-medium tracking-wider hover:text-primary-orange transition-colors font-bebas"
           >
             CONTACT
-          </button>
+          </a>
         </nav>
 
         {/* Action Button (Desktop) */}
         <div className="hidden md:block">
-          <button
-            onClick={() => scrollToSection('contact')}
-            className="px-5 py-1.5 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-white text-xs font-bold tracking-widest transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-orange/30 font-bebas"
+          <a
+             href="mailto:contact@zealhighlights.com"
+            className="px-5 py-1.5 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-white text-xs font-bold tracking-widest transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-orange/30 font-bebas block"
           >
             LET'S TALK
-          </button>
+          </a>
         </div>
 
         {/* Logo */}
-        <div className="logo flex-shrink-0 md:ml-0 ml-auto md:mr-0 mr-2">
+        <div className="logo flex-shrink-0 md:ml-0 ml-auto md:mr-0 mr-2 cursor-pointer" onClick={() => handleNavigation('/')}>
           <div className="logo-icon">
             <img
               src={logo}
@@ -102,36 +105,36 @@ const Header: React.FC = () => {
           >
             <div className="flex flex-col space-y-4">
               <button
-                onClick={() => scrollToSection('work')}
-                className="text-white text-lg font-bebas tracking-wider hover:text-primary-orange text-left p-2 rounded-lg hover:bg-white/5 transition-all"
+                onClick={() => handleNavigation('/')}
+                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 WORK
               </button>
               <button
-                onClick={() => scrollToSection('about')}
-                className="text-white text-lg font-bebas tracking-wider hover:text-primary-orange text-left p-2 rounded-lg hover:bg-white/5 transition-all"
+                onClick={() => handleNavigation('/about')}
+                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/about') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 ABOUT
               </button>
               <button
-                onClick={() => scrollToSection('services')}
-                className="text-white text-lg font-bebas tracking-wider hover:text-primary-orange text-left p-2 rounded-lg hover:bg-white/5 transition-all"
+                onClick={() => handleNavigation('/services')}
+                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/services') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 SERVICES
               </button>
-              <button
-                onClick={() => scrollToSection('contact')}
+              <a
+                href="mailto:contact@zealhighlights.com"
                 className="text-white text-lg font-bebas tracking-wider hover:text-primary-orange text-left p-2 rounded-lg hover:bg-white/5 transition-all"
               >
                 CONTACT
-              </button>
+              </a>
               <div className="pt-2 border-t border-white/10">
-                <button
-                  onClick={() => scrollToSection('contact')}
-                  className="w-full py-3 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-xl text-white text-lg font-bold tracking-widest font-bebas text-center"
+                <a
+                  href="mailto:contact@zealhighlights.com"
+                  className="w-full py-3 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-xl text-white text-lg font-bold tracking-widest font-bebas text-center block"
                 >
                   LET'S TALK
-                </button>
+                </a>
               </div>
             </div>
           </motion.div>

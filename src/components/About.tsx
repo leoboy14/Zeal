@@ -6,7 +6,7 @@ const About: React.FC = () => {
   const aboutText = `Zeal Highlights is a Philippines-based video editing agency supporting clients in the US and around the world. We help content creators and businesses transform raw footage into polished, engaging videos that align with their brand and goals. Our agency operates with a team-based workflow, clear processes, and a strong focus on quality control. Led by experienced editors, we combine creative storytelling with efficient production systems.`
 
   return (
-    <section id="about" className="py-20 px-6 md:px-10 bg-background-card relative z-20">
+    <section id="about" className="pt-32 pb-20 px-6 md:px-10 bg-background-card relative z-20">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
