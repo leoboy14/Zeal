@@ -15,7 +15,7 @@ const projects: Project[] = [
   {
     title: 'TATTUDS',
     category: 'Commercial',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/tattuds-commercial.webp?v=3',
+    thumbnail: '/thumbnails/tattuds-commercial.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/tattuds-commercial.mp4',
     link: '#',
     isVertical: false
@@ -23,7 +23,7 @@ const projects: Project[] = [
   {
     title: 'RYAN + LIZA',
     category: 'Same Day Edit',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/ryan-liza-sde.webp?v=3',
+    thumbnail: '/thumbnails/ryan-liza-sde.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/ryan-liza-sde.mp4',
     link: '#',
     isVertical: false
@@ -31,7 +31,7 @@ const projects: Project[] = [
   {
     title: 'AIRBNB',
     category: 'Property Film',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/airbnb-property-film.webp?v=3',
+    thumbnail: '/thumbnails/airbnb-property-film.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/airbnb-property-film.mp4',
     link: '#',
     isVertical: false
@@ -39,7 +39,7 @@ const projects: Project[] = [
   {
     title: 'CHRISTIAN + BAO',
     category: 'Wedding Film',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/christian-bao.webp?v=3',
+    thumbnail: '/thumbnails/christian-bao.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/christian-bao.mp4',
     link: '#',
     isVertical: false
@@ -47,7 +47,7 @@ const projects: Project[] = [
   {
     title: 'MIN JOO + LISA',
     category: 'Highlights',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/min-joo-lisa-highlights.webp?v=3',
+    thumbnail: '/thumbnails/min-joo-lisa-highlights.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/min-joo-lisa-highlights.mp4',
     link: '#',
     isVertical: false
@@ -55,7 +55,7 @@ const projects: Project[] = [
   {
     title: 'JACOB + CAMILLE',
     category: 'Wedding Film',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/jacob-camille-wedding.webp?v=3',
+    thumbnail: '/thumbnails/jacob-camille-wedding.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/jacob-camille-wedding.mp4',
     link: '#',
     isVertical: false
@@ -64,7 +64,7 @@ const projects: Project[] = [
   {
     title: 'EVERY EXPERT HAS PURPOSE',
     category: 'Reel',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/every-expert-purpose.webp?v=3',
+    thumbnail: '/thumbnails/every-expert-purpose.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/every-expert-purpose.mp4',
     link: '#',
     isVertical: true
@@ -72,7 +72,7 @@ const projects: Project[] = [
   {
     title: 'IZAIAH REEL',
     category: 'Reel',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/izaiah-reel.webp?v=3',
+    thumbnail: '/thumbnails/izaiah-reel.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/izaiah-reel.mp4',
     link: '#',
     isVertical: true
@@ -80,7 +80,7 @@ const projects: Project[] = [
   {
     title: 'PROJECT 7',
     category: 'Reel',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/project-7.webp?v=3',
+    thumbnail: '/thumbnails/project-7.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/project-7.mp4',
     link: '#',
     isVertical: true
@@ -88,7 +88,7 @@ const projects: Project[] = [
   {
     title: 'SALES REP',
     category: 'Reel',
-    thumbnail: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/thumbnails/sales-rep-reel.webp?v=3',
+    thumbnail: '/thumbnails/sales-rep-reel.webp',
     video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/sales-rep-reel.mp4',
     link: '#',
     isVertical: true
