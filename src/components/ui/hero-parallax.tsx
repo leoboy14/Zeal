@@ -129,8 +129,6 @@ export const ProductCard = ({
   };
   translate: MotionValue<number>;
 }) => {
-  const [isHovered, setIsHovered] = React.useState(false);
-
   return (
     <motion.div
       style={{
@@ -140,50 +138,37 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-48 w-[16rem] sm:h-72 sm:w-[24rem] md:h-96 md:w-[30rem] relative shrink-0"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group/product h-48 w-[16rem] sm:h-72 sm:w-[24rem] md:h-96 md:w-[30rem] relative shrink-0 rounded-xl overflow-hidden"
     >
       <a
         href={product.link}
-        className="block group-hover/product:shadow-2xl h-full w-full relative overflow-hidden"
+        className="block group-hover/product:shadow-2xl h-full w-full relative overflow-hidden rounded-xl"
       >
         {product.video ? (
           <video
             src={product.video}
-            className="object-cover object-center absolute h-full w-full inset-0 transition-opacity duration-300"
+            className="object-cover object-center absolute h-full w-full inset-0"
             muted
             loop
             playsInline
-            autoPlay={false}
-            ref={(el) => {
-              if (el) {
-                if (isHovered) {
-                  el.play().catch(() => { });
-                } else {
-                  el.pause();
-                  el.currentTime = 0;
-                }
-              }
+            autoPlay
+          />
+        ) : (
+          <img
+            src={product.thumbnail}
+            height="600"
+            width="600"
+            className="object-cover object-left-top absolute h-full w-full inset-0"
+            alt={product.title}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = 'https://via.placeholder.com/800x600/1a1a1a/ffffff?text=' + encodeURIComponent(product.title);
             }}
           />
-        ) : null}
-        <img
-          src={product.thumbnail}
-          height="600"
-          width="600"
-          className={`object-cover object-left-top absolute h-full w-full inset-0 transition-opacity duration-300 ${isHovered && product.video ? "opacity-0" : "opacity-100"
-            }`}
-          alt={product.title}
-          onError={(e) => {
-            // Fallback to a placeholder if image fails to load
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://via.placeholder.com/800x600/1a1a1a/ffffff?text=' + encodeURIComponent(product.title);
-          }}
-        />
+        )}
       </a>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white text-sm md:text-base">
+      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-60 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none transition-opacity duration-300"></div>
+      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white text-sm md:text-base font-medium transition-opacity duration-300">
         {product.title}
       </h2>
     </motion.div>
