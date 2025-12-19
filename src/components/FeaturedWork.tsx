@@ -201,7 +201,7 @@ const FeaturedWork: React.FC = () => {
       {/* Lightbox Modal */}
       {selectedProject && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4"
           onClick={() => setSelectedProject(null)}
         >
           <div className={`relative bg-black rounded-lg overflow-hidden shadow-2xl ${selectedProject.isVertical ? 'w-auto h-[85vh] aspect-[9/16]' : 'w-full max-w-5xl aspect-video'}`} onClick={(e) => e.stopPropagation()}>
