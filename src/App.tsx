@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
 import HeroParallaxDemo from './components/hero-parallax-demo'
 import FeaturedWork from './components/FeaturedWork'
+import Services from './components/Services'
+import About from './components/About'
 import LoadingScreen from './components/LoadingScreen'
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
       <Header />
       <HeroParallaxDemo />
       <FeaturedWork />
+      <Services />
+      <About />
     </div>
   )
 }
