@@ -147,11 +147,13 @@ export const ProductCard = ({
         {product.video ? (
           <video
             src={product.video}
+            poster={product.thumbnail}
             className="object-cover object-center absolute h-full w-full inset-0"
             muted
             loop
             playsInline
             autoPlay
+            preload="metadata"
           />
         ) : (
           <img
