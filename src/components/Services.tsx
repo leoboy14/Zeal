@@ -1,50 +1,52 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { HoverEffect } from './ui/card-hover-effect'
 
 const Services: React.FC = () => {
-  const servicesList = [
-    "Short-form video editing for Reels, Shorts, and TikTok",
-    "Long-form YouTube and content-based videos",
-    "Podcast and talking-head video editing",
-    "Wedding highlights and event video editing, capturing key moments with cinematic storytelling",
-    "Motion graphics, captions, and brand-consistent visuals",
-    "Custom post-production solutions based on your workflow"
+  const services = [
+    {
+      title: "Short-Form Content",
+      description: "High-retention editing for Reels, Shorts, and TikTok. We optimize for algorithms with dynamic captions and pacing."
+    },
+    {
+      title: "Long-Form Video",
+      description: "Compelling storytelling for YouTube and corporate content. We handle pacing, sound design, and color grading."
+    },
+    {
+      title: "Podcast Editing",
+      description: "Multi-cam editing for podcasts and talking-head videos. We ensure crystal clear audio and engaging visual cuts."
+    },
+    {
+      title: "Wedding & Events",
+      description: "Cinematic highlights that capture the emotion of your special day. Beautiful color grading and emotional storytelling."
+    },
+    {
+      title: "Motion Graphics",
+      description: "Custom animations, kinetic typography, and brand-consistent visuals to elevate your production value."
+    },
+    {
+      title: "Custom Solutions",
+      description: "Tailored post-production workflows designed around your specific needs and brand guidelines."
+    }
   ]
 
   return (
     <section id="services" className="py-20 px-6 md:px-10 bg-background-dark relative z-20">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl md:text-5xl font-bebas tracking-wider text-white mb-8">
+          <h2 className="text-4xl md:text-5xl font-bebas tracking-wider text-white mb-2 text-center">
             SERVICES
           </h2>
-          
-          <p className="text-text-gray text-lg mb-8 leading-relaxed font-light">
-            We provide professional video editing services designed to support both content-driven brands and special events. Our agency delivers consistent, high-quality edits tailored to your goals, audience, and timeline.
+          <p className="text-text-gray text-center max-w-2xl mx-auto mb-10 font-light">
+            Professional edits tailored to your goals.
           </p>
 
-          <div className="bg-background-card p-8 rounded-2xl border border-white/5 mb-8">
-            <h3 className="text-xl font-bebas tracking-wide text-primary-orange mb-6">
-              OUR SERVICES INCLUDE:
-            </h3>
-            <ul className="space-y-4">
-              {servicesList.map((item, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <span className="text-primary-orange mt-1">✦</span>
-                  <span className="text-white font-light">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <p className="text-text-gray text-lg leading-relaxed font-light">
-            Whether you need ongoing content support or polished edits for once-in-a-lifetime events, <span className="text-white font-medium">Zeal Highlights</span> delivers reliable, detail-focused video editing you can trust.
-          </p>
+          <HoverEffect items={services} />
         </motion.div>
       </div>
     </section>
