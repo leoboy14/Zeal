@@ -7,8 +7,7 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
-
-
+import { FlipWords } from "@/components/ui/flip-words";
 
 export const HeroParallax = ({
   products,
@@ -103,13 +102,20 @@ export const HeroParallax = ({
 };
 
 export const Header = () => {
+  const heroWords = [
+    { text: "STORIES", gradient: "linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)" },
+    { text: "MOMENTS", gradient: "linear-gradient(135deg, #F7931E 0%, #FFD93D 100%)" },
+    { text: "MEMORIES", gradient: "linear-gradient(135deg, #FFD93D 0%, #FF6B35 100%)" },
+    { text: "VISIONS", gradient: "linear-gradient(135deg, #FF6B35 0%, #FFD93D 100%)" },
+  ];
+  
   return (
-    <div className="max-w-7xl relative mx-auto h-screen flex flex-col justify-center pt-32 md:pt-12 px-4 w-full left-0 top-0 z-50 pointer-events-none">
-      <h1 className="text-4xl md:text-7xl font-bold text-white font-bebas tracking-wider leading-none">
-        BRINGING <span className="text-primary-orange">STORIES</span> <br />
+    <div className="max-w-7xl relative mx-auto h-screen flex flex-col justify-center pt-40 md:pt-24 px-4 w-full left-0 top-0 z-50 pointer-events-none">
+      <h1 className="text-3xl md:text-5xl font-bold text-white font-bebas tracking-wider leading-none">
+        BRINGING <FlipWords words={heroWords} duration={2500} /> <br />
         TO LIFE THROUGH <span className="text-primary-orange">EDITING</span>
       </h1>
-      <p className="max-w-2xl text-base md:text-xl mt-6 text-neutral-200 font-montserrat font-light leading-relaxed">
+      <p className="max-w-2xl text-sm md:text-lg mt-5 text-neutral-200 font-montserrat font-light leading-relaxed">
         Dynamic cuts, compelling narratives, and high-impact visuals.
         We transform raw footage into polished masterpieces that captivate audiences.
       </p>

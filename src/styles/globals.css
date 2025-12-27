@@ -2,15 +2,33 @@
 
 @layer base {
   :root {
-    --primary-orange: #FF6B35;
-    --secondary-orange: #F7931E;
+    /* 60% - Dominant (Backgrounds) */
     --bg-dark: #0a0a0a;
     --bg-card: #141414;
+    --bg-elevated: #1a1a1a;
     --bg-sidebar: #111111;
+    
+    /* 30% - Secondary (UI Elements) */
+    --surface-default: #1f1f1f;
+    --surface-light: #2a2a2a;
+    --border-color: #2a2a2a;
+    
+    /* 10% - Accent (CTAs, Highlights) */
+    --accent-orange: #FF6B35;
+    --accent-orange-light: #F7931E;
+    --accent-gold: #FFD93D;
+    
+    /* Legacy aliases */
+    --primary-orange: #FF6B35;
+    --secondary-orange: #F7931E;
+    --accent-gold-dark: #C9A962;
+    
+    /* Text Colors */
     --text-white: #ffffff;
+    --text-cream: #FFF8F0;
+    --text-muted: #9a9a9a;
     --text-gray: #9a9a9a;
     --text-light-gray: #666666;
-    --border-color: #2a2a2a;
   }
 
   * {
@@ -22,6 +40,8 @@
     color: var(--text-white);
     font-family: 'Montserrat', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
   }
 
   html {
@@ -57,4 +77,121 @@
     outline: 2px solid var(--primary-orange);
     outline-offset: 2px;
   }
+
+  /* Glassmorphism card */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+  }
+
+  .glass-card-glow {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: 1.5rem;
+    box-shadow: 
+      0 0 0 1px rgba(255, 107, 53, 0.1),
+      0 8px 32px rgba(255, 107, 53, 0.1),
+      inset 0 0 32px rgba(255, 107, 53, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-glow:hover {
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 
+      0 0 0 1px rgba(255, 107, 53, 0.2),
+      0 8px 40px rgba(255, 107, 53, 0.2),
+      inset 0 0 32px rgba(255, 107, 53, 0.1);
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Gradient mesh background */
+  .gradient-mesh {
+    background: 
+      radial-gradient(at 0% 0%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(247, 147, 30, 0.1) 0%, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(255, 217, 61, 0.08) 0%, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+    animation: gradientShift 8s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  /* Text with gold accent */
+  .text-gradient-gold {
+    background: linear-gradient(90deg, #FFD93D, #C9A962, #FFD93D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Orange glow button */
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-orange), var(--accent-gold), var(--primary-orange));
+    background-size: 300% 100%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: gradientShift 3s ease infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-glow:hover::before {
+    opacity: 1;
+  }
+
+  /* Animated border gradient */
+  .border-gradient-animated {
+    position: relative;
+    border: none !important;
+  }
+
+  .border-gradient-animated::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(90deg, var(--primary-orange), var(--secondary-orange), var(--accent-gold), var(--primary-orange));
+    background-size: 300% 100%;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: gradientShift 4s ease infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }

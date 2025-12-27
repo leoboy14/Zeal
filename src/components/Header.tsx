@@ -63,22 +63,21 @@ const Header: React.FC = () => {
           >
             SERVICES
           </button>
-          <a
-            href="mailto:contact@zealhighlights.com"
-            className="text-text-white text-sm font-medium tracking-wider hover:text-primary-orange transition-colors font-bebas"
+          <button
+            onClick={() => handleNavigation('/contact')}
+            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/contact') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             CONTACT
-          </a>
+          </button>
         </nav>
 
-        {/* Action Button (Desktop) */}
         <div className="hidden md:block">
-          <a
-             href="mailto:contact@zealhighlights.com"
+          <button
+            onClick={() => handleNavigation('/contact')}
             className="px-5 py-1.5 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-white text-xs font-bold tracking-widest transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-orange/30 font-bebas block"
           >
             LET'S TALK
-          </a>
+          </button>
         </div>
 
         {/* Logo */}
@@ -122,19 +121,19 @@ const Header: React.FC = () => {
               >
                 SERVICES
               </button>
-              <a
-                href="mailto:contact@zealhighlights.com"
-                className="text-white text-lg font-bebas tracking-wider hover:text-primary-orange text-left p-2 rounded-lg hover:bg-white/5 transition-all"
+              <button
+                onClick={() => handleNavigation('/contact')}
+                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/contact') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 CONTACT
-              </a>
+              </button>
               <div className="pt-2 border-t border-white/10">
-                <a
-                  href="mailto:contact@zealhighlights.com"
-                  className="w-full py-3 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-xl text-white text-lg font-bold tracking-widest font-bebas text-center block"
+                <button
+                  onClick={() => handleNavigation('/contact')}
+                  className="w-full py-4 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-xl text-white text-lg font-bold tracking-widest font-bebas text-center block"
                 >
                   LET'S TALK
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>

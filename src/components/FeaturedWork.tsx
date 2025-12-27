@@ -163,7 +163,7 @@ const FeaturedWork: React.FC = () => {
     <section id="work" className="py-8 md:py-16 px-6 md:px-10 bg-background-card rounded-t-3xl -mt-8 relative z-20">
       {/* Films Section Header */}
       <div className="max-w-screen-2xl mx-auto mb-8">
-        <h2 className="text-3xl md:text-4xl font-bebas tracking-wider mb-2">
+        <h2 className="text-2xl md:text-3xl font-bebas tracking-wider mb-2">
           FEATURED FILMS
         </h2>
         <p className="text-text-gray text-sm font-light">
@@ -179,7 +179,7 @@ const FeaturedWork: React.FC = () => {
       {/* Reels Section Header */}
       <div className="max-w-screen-2xl mx-auto mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <h2 className="text-3xl md:text-4xl font-bebas tracking-wider">
+          <h2 className="text-2xl md:text-3xl font-bebas tracking-wider">
             REELS
           </h2>
           <span className="px-3 py-1 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-xs font-medium tracking-wide">
