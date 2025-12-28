@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import logo from '../assets/logo.png'
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -29,14 +30,17 @@ const Footer: React.FC = () => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-orange to-secondary-orange rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-              <span className="font-bebas text-xl tracking-wider text-white">ZEAL HIGHLIGHTS</span>
-            </div>
+            <Link 
+              to="/" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="inline-block transition-transform duration-300 hover:scale-105"
+            >
+              <img 
+                src={logo} 
+                alt="Zeal Highlights" 
+                className="h-12 w-auto object-contain"
+              />
+            </Link>
             <p className="text-text-gray text-sm leading-relaxed max-w-xs">
               Transforming raw footage into polished, engaging videos that align with your brand and goals.
             </p>
@@ -159,7 +163,7 @@ const Footer: React.FC = () => {
               © {currentYear} Zeal Highlights. All rights reserved.
             </p>
             <p className="text-text-gray text-xs">
-              Crafted with <span className="text-primary-orange">♥</span> for creators worldwide
+              To God be the Glory!
             </p>
           </div>
         </div>

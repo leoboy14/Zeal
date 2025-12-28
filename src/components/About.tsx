@@ -15,10 +15,14 @@ const teamMembers: TeamMember[] = [
   { name: 'Leo', role: 'Managing Partner', image: '/team/Leo.png' },
   { name: 'Jun2', role: 'Head of Video Production', image: '/team/Jun2.png' },
   { name: 'Jing2', role: 'Lead Video Editor', image: '/team/Jing Jing.png' },
-  { name: 'Karlo', role: 'Long-form Video Editor', image: '/team/Karlo.png' },
-  { name: 'Ate Donna', role: 'Short-Form Content Specialist', image: '/team/Donna Bael Corpuz.png' },
   { name: 'Angela', role: 'Project Manager / Client Success', image: '/team/Angela.png' },
   { name: 'Nicko', role: 'Quality Control & Delivery Specialist', image: '/team/Nicko.png', scale: 1.5 },
+  { name: 'Karlo', role: 'Long-Form Video Editor', image: '/team/Karlo.png' },
+  { name: 'Catleya', role: 'Long-Form Video Editor', image: '/team/Catleya.png' },
+  { name: 'Christian', role: 'Long-Form Video Editor', image: '/team/Christian.png' },
+  { name: 'Ate Donna', role: 'Short-Form Video Editor', image: '/team/Donna Bael Corpuz.png' },
+  { name: 'April', role: 'Short-Form Video Editor', image: '/team/April.png' },
+  { name: 'Jared', role: 'Short-Form Video Editor', image: '/team/Jared.png' },
 ]
 
 // Animated Counter Component
@@ -75,7 +79,7 @@ const StatCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-white/[0.03] backdrop-blur-sm border border-white/10 hover:border-primary-orange/30 transition-all duration-500 group overflow-hidden"
+      className="relative p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 group overflow-hidden shadow-xl"
     >
       {/* Gradient Glow */}
       <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
@@ -111,7 +115,7 @@ const ValueCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-white/[0.03] backdrop-blur-sm border border-white/10 hover:border-primary-orange/30 transition-all duration-500 group"
+      className="relative p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 group shadow-xl"
     >
       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-orange/20 to-secondary-orange/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
         {icon}
@@ -132,7 +136,7 @@ const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, ind
       viewport={{ once: true }}
       className="group relative"
     >
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-primary-orange/50 transition-all duration-500">
+      <div className="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 shadow-xl">
         {/* Image Container */}
         <div className="relative aspect-[3/4] overflow-hidden">
           <img
@@ -168,12 +172,21 @@ const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, ind
 const About: React.FC = () => {
   return (
     <>
-      <section id="about" className="pt-32 pb-20 px-6 md:px-10 bg-background-dark relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-orange/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-secondary-orange/10 rounded-full blur-[120px]" />
+      <section id="about" className="pt-32 pb-20 px-6 md:px-10 relative overflow-hidden">
+        {/* Coral Orange Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-orange via-secondary-orange to-primary-orange" />
+        
+        {/* Large Background Text */}
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+          <h2 
+            className="font-bebas text-[30vw] md:text-[25vw] tracking-wider text-white/10 whitespace-nowrap select-none"
+          >
+            ABOUT US
+          </h2>
         </div>
+        
+        {/* Subtle Pattern/Texture Overlay */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Hero Title */}
@@ -214,10 +227,10 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="md:col-span-2 lg:row-span-2 relative p-8 md:p-10 rounded-3xl bg-white/[0.03] backdrop-blur-sm border border-white/10 overflow-hidden group"
+              className="md:col-span-2 lg:row-span-2 relative p-8 md:p-10 rounded-3xl bg-black/40 backdrop-blur-md border border-white/20 overflow-hidden group shadow-2xl"
             >
               {/* Gradient Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary-orange/10 via-transparent to-secondary-orange/5 opacity-50" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-50" />
               
               <div className="relative z-10">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-orange to-secondary-orange flex items-center justify-center mb-6">
@@ -327,7 +340,7 @@ const About: React.FC = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
               {teamMembers.map((member, index) => (
                 <TeamCard key={member.name} member={member} index={index} />
               ))}
@@ -343,8 +356,8 @@ const About: React.FC = () => {
             className="relative rounded-3xl overflow-hidden"
           >
             {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-orange/20 via-secondary-orange/10 to-primary-orange/20" />
-            <div className="absolute inset-0 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-md" />
+            <div className="absolute inset-0 border border-white/20 rounded-3xl" />
             
             {/* Content */}
             <div className="relative z-10 px-8 py-16 md:py-20 text-center">

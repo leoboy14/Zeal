@@ -45,3 +45,4 @@ export class ParallaxEffect implements Component {
 
 
 
+
