@@ -2,27 +2,90 @@ import React, { useEffect, useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Footer from './Footer'
+import { Tooltip } from './ui/tooltip-card'
 
 interface TeamMember {
   name: string
   role: string
   image: string
   scale?: number
+  bio?: string
 }
 
 const teamMembers: TeamMember[] = [
-  { name: 'Harhley', role: 'Founder & Creative Director', image: '/team/Harhley Ponce.png' },
-  { name: 'Leo', role: 'Managing Partner', image: '/team/Leo.png' },
-  { name: 'Jun2', role: 'Head of Video Production', image: '/team/Jun2.png' },
-  { name: 'Jing2', role: 'Lead Video Editor', image: '/team/Jing Jing.png' },
-  { name: 'Angela', role: 'Project Manager / Client Success', image: '/team/Angela.png' },
-  { name: 'Nicko', role: 'Quality Control & Delivery Specialist', image: '/team/Nicko.png', scale: 1.5 },
-  { name: 'Karlo', role: 'Long-Form Video Editor', image: '/team/Karlo.png' },
-  { name: 'Catleya', role: 'Long-Form Video Editor', image: '/team/Catleya.png' },
-  { name: 'Christian', role: 'Long-Form Video Editor', image: '/team/Christian.png' },
-  { name: 'Ate Donna', role: 'Short-Form Video Editor', image: '/team/Donna Bael Corpuz.png' },
-  { name: 'April', role: 'Short-Form Video Editor', image: '/team/April.png' },
-  { name: 'Jared', role: 'Short-Form Video Editor', image: '/team/Jared.png' },
+  { 
+    name: 'Harhley', 
+    role: 'Founder & Creative Director', 
+    image: '/team/Harhley Ponce.png',
+    bio: 'Visionary leader who founded Zeal Highlights with a passion for storytelling and creative excellence.'
+  },
+  { 
+    name: 'Leo', 
+    role: 'Managing Partner', 
+    image: '/team/Leo.png',
+    bio: 'Strategic partner overseeing operations and ensuring client success across all projects.'
+  },
+  { 
+    name: 'Jun', 
+    role: 'Head of Video Production', 
+    image: '/team/Jun2.png',
+    bio: 'Leads the production team with expertise in cinematic editing and workflow optimization.'
+  },
+  { 
+    name: 'Jing', 
+    role: 'Lead Video Editor', 
+    image: '/team/Jing Jing.png',
+    bio: 'Master editor specializing in long-form content with an eye for pacing and visual storytelling.'
+  },
+  { 
+    name: 'Angela', 
+    role: 'Project Manager / Client Success', 
+    image: '/team/Angela.png',
+    bio: 'Dedicated to ensuring smooth project delivery and exceptional client communication.'
+  },
+  { 
+    name: 'Nicko', 
+    role: 'Quality Control & Delivery Specialist', 
+    image: '/team/Nicko.png', 
+    scale: 1.5,
+    bio: 'Ensures every video meets our high standards before delivery to clients.'
+  },
+  { 
+    name: 'Karlo', 
+    role: 'Long-Form Video Editor', 
+    image: '/team/Karlo.png',
+    bio: 'Specializes in documentary-style and educational content with attention to detail.'
+  },
+  { 
+    name: 'Catleya', 
+    role: 'Long-Form Video Editor', 
+    image: '/team/Catleya.png',
+    bio: 'Creates engaging long-form videos with a focus on narrative flow and audience retention.'
+  },
+  { 
+    name: 'Christian', 
+    role: 'Long-Form Video Editor', 
+    image: '/team/Christian.png',
+    bio: 'Passionate editor bringing creativity and technical skill to every project.'
+  },
+  { 
+    name: 'Donna', 
+    role: 'Short-Form Video Editor', 
+    image: '/team/Donna Bael Corpuz.png',
+    bio: 'Expert in viral short-form content that captures attention in seconds.'
+  },
+  { 
+    name: 'April', 
+    role: 'Short-Form Video Editor', 
+    image: '/team/april.png',
+    bio: 'Creates punchy, engaging reels and shorts optimized for social media algorithms.'
+  },
+  { 
+    name: 'Jared', 
+    role: 'Short-Form Video Editor', 
+    image: '/team/Jared.png',
+    bio: 'Brings fresh creative ideas to short-form content with trending styles and effects.'
+  },
 ]
 
 // Animated Counter Component
@@ -126,46 +189,59 @@ const ValueCard: React.FC<{
   )
 }
 
-// Team Card Component
+// Team Card Component with Tooltip
 const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, index }) => {
+  // Custom tooltip content for team member
+  const TooltipContent = () => (
+    <div className="max-w-[200px]">
+      <p className="font-bebas text-lg tracking-wider text-white">{member.name}</p>
+      <p className="text-xs text-primary-orange font-medium mt-0.5">{member.role}</p>
+      {member.bio && (
+        <p className="mt-2 text-xs text-text-gray leading-relaxed">{member.bio}</p>
+      )}
+    </div>
+  );
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="group relative"
-    >
-      <div className="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 shadow-xl">
-        {/* Image Container */}
-        <div className="relative aspect-[3/4] overflow-hidden">
-          <img
-            src={member.image}
-            alt={member.name}
-            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
-            style={{ transform: member.scale ? `scale(${member.scale})` : undefined }}
-          />
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+    <Tooltip content={<TooltipContent />}>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        viewport={{ once: true }}
+        className="group relative cursor-pointer"
+      >
+        <div className="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 shadow-xl">
+          {/* Image Container */}
+          <div className="relative aspect-[3/4] overflow-hidden">
+            <img
+              src={member.image}
+              alt={member.name}
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+              style={{ transform: member.scale ? `scale(${member.scale})` : undefined }}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+            
+            {/* Orange Accent */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary-orange/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </div>
           
-          {/* Orange Accent */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-primary-orange/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Content */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
+            <h3 className="font-bebas text-xl md:text-2xl tracking-wider text-white group-hover:text-primary-orange transition-colors duration-300">
+              {member.name}
+            </h3>
+            <p className="text-text-gray text-xs md:text-sm font-light mt-1 leading-snug">
+              {member.role}
+            </p>
+          </div>
+          
+          {/* Decorative Border Glow */}
+          <div className="absolute inset-0 rounded-2xl border-2 border-primary-orange/0 group-hover:border-primary-orange/30 transition-all duration-500 pointer-events-none" />
         </div>
-        
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-          <h3 className="font-bebas text-xl md:text-2xl tracking-wider text-white group-hover:text-primary-orange transition-colors duration-300">
-            {member.name}
-          </h3>
-          <p className="text-text-gray text-xs md:text-sm font-light mt-1 leading-snug">
-            {member.role}
-          </p>
-        </div>
-        
-        {/* Decorative Border Glow */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-primary-orange/0 group-hover:border-primary-orange/30 transition-all duration-500 pointer-events-none" />
-      </div>
-    </motion.div>
+      </motion.div>
+    </Tooltip>
   )
 }
 
