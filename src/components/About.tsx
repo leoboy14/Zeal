@@ -257,7 +257,7 @@ const About: React.FC = () => {
 
             {/* Stats Cards */}
             <StatCard value={50} suffix="+" label="Projects Completed" delay={0.1} />
-            <StatCard value={8} label="Team Members" delay={0.2} gradient="from-gold to-accent-gold" />
+            <StatCard value={14} label="Team Members" delay={0.2} gradient="from-gold to-accent-gold" />
             <StatCard value={24} suffix="/7" label="Support Available" delay={0.3} gradient="from-warm to-secondary-orange" />
             <StatCard value={10} suffix="+" label="Countries Served" delay={0.4} gradient="from-sunset to-accent-gold" />
           </div>

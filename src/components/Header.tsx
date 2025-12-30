@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import logo from '../assets/logo.png'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
-  const navigate = useNavigate()
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,13 +18,8 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleNavigation = (path: string) => {
+  const closeMobileMenu = () => {
     setMobileMenuOpen(false)
-    if (location.pathname !== path) {
-       navigate(path)
-    } else {
-       window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
   }
 
   const isActive = (path: string) => location.pathname === path
@@ -45,43 +40,43 @@ const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <button
-            onClick={() => handleNavigation('/')}
+          <Link
+            to="/"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             WORK
-          </button>
-          <button
-            onClick={() => handleNavigation('/about')}
+          </Link>
+          <Link
+            to="/about"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/about') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             ABOUT
-          </button>
-          <button
-            onClick={() => handleNavigation('/services')}
+          </Link>
+          <Link
+            to="/services"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/services') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             SERVICES
-          </button>
-          <button
-            onClick={() => handleNavigation('/contact')}
+          </Link>
+          <Link
+            to="/contact"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/contact') ? 'text-primary-orange' : 'text-text-white hover:text-primary-orange'}`}
           >
             CONTACT
-          </button>
+          </Link>
         </nav>
 
         <div className="hidden md:block">
-          <button
-            onClick={() => handleNavigation('/contact')}
+          <Link
+            to="/contact"
             className="px-5 py-1.5 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-white text-xs font-bold tracking-widest transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary-orange/30 font-bebas block"
           >
             LET'S TALK
-          </button>
+          </Link>
         </div>
 
         {/* Logo */}
-        <div className="logo flex-shrink-0 md:ml-0 ml-auto md:mr-0 mr-2 cursor-pointer" onClick={() => handleNavigation('/')}>
+        <Link to="/" className="logo flex-shrink-0 md:ml-0 ml-auto md:mr-0 mr-2">
           <div className="logo-icon">
             <img
               src={logo}
@@ -89,7 +84,7 @@ const Header: React.FC = () => {
               className="h-8 w-auto"
             />
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Mobile Menu Dropdown */}
@@ -103,37 +98,42 @@ const Header: React.FC = () => {
             className="absolute top-full left-0 right-0 mt-4 mx-4 p-4 bg-black/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl md:hidden overflow-hidden"
           >
             <div className="flex flex-col space-y-4">
-              <button
-                onClick={() => handleNavigation('/')}
+              <Link
+                to="/"
+                onClick={closeMobileMenu}
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 WORK
-              </button>
-              <button
-                onClick={() => handleNavigation('/about')}
+              </Link>
+              <Link
+                to="/about"
+                onClick={closeMobileMenu}
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/about') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 ABOUT
-              </button>
-              <button
-                onClick={() => handleNavigation('/services')}
+              </Link>
+              <Link
+                to="/services"
+                onClick={closeMobileMenu}
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/services') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 SERVICES
-              </button>
-              <button
-                onClick={() => handleNavigation('/contact')}
+              </Link>
+              <Link
+                to="/contact"
+                onClick={closeMobileMenu}
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-white/5 transition-all ${isActive('/contact') ? 'text-primary-orange' : 'text-white hover:text-primary-orange'}`}
               >
                 CONTACT
-              </button>
+              </Link>
               <div className="pt-2 border-t border-white/10">
-                <button
-                  onClick={() => handleNavigation('/contact')}
+                <Link
+                  to="/contact"
+                  onClick={closeMobileMenu}
                   className="w-full py-4 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-xl text-white text-lg font-bold tracking-widest font-bebas text-center block"
                 >
                   LET'S TALK
-                </button>
+                </Link>
               </div>
             </div>
           </motion.div>
