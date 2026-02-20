@@ -129,14 +129,38 @@ const FeaturedWork: React.FC = () => {
             >
               ✕
             </button>
-            <video
-              src={selectedProject.video}
-              poster={selectedProject.thumbnail}
-              autoPlay
-              controls
-              preload="auto"
-              className="w-full h-full object-contain"
-            />
+            <div
+              className={`relative w-full ${
+                selectedProject.isVertical ? 'aspect-[9/16]' : 'aspect-video'
+              } bg-black/50 rounded-lg overflow-hidden flex items-center justify-center`}
+            >
+              {(() => {
+                const match = selectedProject.video.match(/b-cdn\.net\/([^/]+)\//)
+                const videoId = match ? match[1] : null
+
+                if (videoId) {
+                  return (
+                    <iframe
+                      src={`https://iframe.mediadelivery.net/embed/603046/${videoId}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`}
+                      loading="lazy"
+                      className="w-full h-full border-0 absolute top-0 left-0"
+                      allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+                      allowFullScreen={true}
+                    ></iframe>
+                  )
+                }
+
+                return (
+                  <video
+                    src={selectedProject.video}
+                    className="w-full h-full object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                  />
+                )
+              })()}
+            </div>
           </div>
         </div>,
         document.body
