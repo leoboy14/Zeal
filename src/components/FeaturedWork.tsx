@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 
 interface Project {
@@ -10,98 +11,15 @@ interface Project {
   isVertical: boolean
 }
 
-const projects: Project[] = [
-  // Long Videos - Horizontal/Landscape Format (16:9)
-  {
-    title: 'TATTUDS',
-    category: 'Commercial',
-    thumbnail: '/thumbnails/tattuds-commercial.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/tattuds-commercial.mp4',
-    link: '#',
-    isVertical: false
-  },
-  {
-    title: 'RYAN + LIZA',
-    category: 'Same Day Edit',
-    thumbnail: '/thumbnails/ryan-liza-sde.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/ryan-liza-sde.mp4',
-    link: '#',
-    isVertical: false
-  },
-  {
-    title: 'AIRBNB',
-    category: 'Property Film',
-    thumbnail: '/thumbnails/airbnb-property-film.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/airbnb-property-film.mp4',
-    link: '#',
-    isVertical: false
-  },
-  {
-    title: 'CHRISTIAN + BAO',
-    category: 'Wedding Film',
-    thumbnail: '/thumbnails/christian-bao.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/christian-bao.mp4',
-    link: '#',
-    isVertical: false
-  },
-  {
-    title: 'MIN JOO + LISA',
-    category: 'Highlights',
-    thumbnail: '/thumbnails/min-joo-lisa-highlights.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/min-joo-lisa-highlights.mp4',
-    link: '#',
-    isVertical: false
-  },
-  {
-    title: 'JACOB + CAMILLE',
-    category: 'Wedding Film',
-    thumbnail: '/thumbnails/jacob-camille-wedding.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/jacob-camille-wedding.mp4',
-    link: '#',
-    isVertical: false
-  },
-  // Vertical Videos - Reels/Portrait Format (9:16) - Social Media
-  {
-    title: 'EVERY EXPERT HAS PURPOSE',
-    category: 'Reel',
-    thumbnail: '/thumbnails/every-expert-purpose.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/every-expert-purpose.mp4',
-    link: '#',
-    isVertical: true
-  },
-  {
-    title: 'IZAIAH REEL',
-    category: 'Reel',
-    thumbnail: '/thumbnails/izaiah-reel.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/izaiah-reel.mp4',
-    link: '#',
-    isVertical: true
-  },
-  {
-    title: 'PROJECT 7',
-    category: 'Reel',
-    thumbnail: '/thumbnails/project-7.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/project-7.mp4',
-    link: '#',
-    isVertical: true
-  },
-  {
-    title: 'SALES REP',
-    category: 'Reel',
-    thumbnail: '/thumbnails/sales-rep-reel.webp',
-    video: 'https://ydqeqenhdvbviizowwub.supabase.co/storage/v1/object/public/videos/sales-rep-reel.mp4',
-    link: '#',
-    isVertical: true
-  }
-]
+import { videoProjects } from '../lib/videoData'
 
 const FeaturedWork: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   // Separate landscape films from vertical reels
-  const landscapeFilms = projects.filter(p => !p.isVertical)
-  const verticalReels = projects.filter(p => p.isVertical)
+  const landscapeFilms = videoProjects.filter((p: Project) => !p.isVertical)
+  const verticalReels = videoProjects.filter((p: Project) => p.isVertical)
 
   const renderVideoCard = (project: Project, isVertical: boolean = false) => {
     const cardId = `${project.title}-${project.category}`
@@ -199,14 +117,14 @@ const FeaturedWork: React.FC = () => {
       </div>
 
       {/* Lightbox Modal */}
-      {selectedProject && (
+      {selectedProject && createPortal(
         <div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 p-4 md:p-8"
           onClick={() => setSelectedProject(null)}
         >
-          <div className={`relative bg-black rounded-lg overflow-hidden shadow-2xl ${selectedProject.isVertical ? 'w-auto h-[85vh] aspect-[9/16]' : 'w-full max-w-5xl aspect-video'}`} onClick={(e) => e.stopPropagation()}>
+          <div className={`relative bg-black rounded-xl overflow-hidden shadow-2xl flex items-center justify-center ${selectedProject.isVertical ? 'w-auto h-[90vh] aspect-[9/16]' : 'w-full max-w-6xl aspect-video'}`} onClick={(e) => e.stopPropagation()}>
             <button
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+              className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-colors"
               onClick={() => setSelectedProject(null)}
             >
               ✕
@@ -217,10 +135,11 @@ const FeaturedWork: React.FC = () => {
               autoPlay
               controls
               preload="auto"
-              className="w-full h-full"
+              className="w-full h-full object-contain"
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   )

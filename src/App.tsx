@@ -5,11 +5,13 @@ import Home from './pages/Home'
 import Services from './components/Services'
 import About from './components/About'
 import Contact from './components/Contact'
+import Dashboard from './components/Dashboard'
 import LoadingScreen from './components/LoadingScreen'
 import CursorGlow from './components/CursorGlow'
 
 function AppContent() {
   const location = useLocation();
+  const isDashboard = location.pathname === '/dashboard';
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -17,13 +19,14 @@ function AppContent() {
 
   return (
     <>
-      <CursorGlow />
-      <Header />
+      {!isDashboard && <CursorGlow />}
+      {!isDashboard && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </>
   );
