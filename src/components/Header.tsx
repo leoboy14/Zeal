@@ -25,9 +25,9 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <header className="fixed top-6 inset-x-0 w-[95%] max-w-4xl mx-auto z-[100] px-4">
+    <header className="fixed top-4 sm:top-6 inset-x-0 w-[95%] max-w-4xl mx-auto z-[100] px-2 sm:px-4">
       <div
-        className={`w-full rounded-full border border-white/10 bg-black/60 backdrop-blur-md shadow-2xl px-6 py-3 flex items-center justify-between transition-all duration-300 relative ${scrolled ? 'bg-black/80 border-white/20' : ''
+        className={`w-full rounded-full border border-white/10 bg-black/60 backdrop-blur-md shadow-2xl px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between transition-all duration-300 relative ${scrolled ? 'bg-black/80 border-white/20' : ''
           }`}
       >
         {/* Mobile Menu Toggle */}
@@ -76,12 +76,12 @@ const Header: React.FC = () => {
         </div>
 
         {/* Logo */}
-        <Link to="/" className="logo flex-shrink-0 md:ml-0 ml-auto md:mr-0 mr-2">
+        <Link to="/" className="logo flex-shrink-0 md:ml-0 ml-auto mr-2 md:mr-0">
           <div className="logo-icon">
             <img
               src={logo}
               alt="Zeal Highlights Logo"
-              className="h-8 w-auto"
+              className="h-6 sm:h-8 w-auto"
             />
           </div>
         </Link>

@@ -13,48 +13,52 @@ const config: Config = {
         'xs': '475px',
       },
       colors: {
-        // 60% - Dominant (Backgrounds)
+        // Semantic aliases using CSS variables from globals.css
         background: {
-          DEFAULT: '#0a0a0a',
-          dark: '#0a0a0a',
-          card: '#141414',
-          elevated: '#1a1a1a',
-          sidebar: '#111111',
+          DEFAULT: "var(--background)",
+          dark: "var(--bg-dark)",
+          card: "var(--card)",
+          elevated: "var(--bg-card)",
+          sidebar: "var(--sidebar)",
         },
+        foreground: "var(--foreground)",
         // 30% - Secondary (UI Elements)
         surface: {
-          DEFAULT: '#1f1f1f',
-          light: '#2a2a2a',
-          border: '#2a2a2a',
+          DEFAULT: "var(--secondary)",
+          light: "var(--muted)",
+          border: "var(--border)",
         },
         // 10% - Accent (CTAs, Highlights)
         accent: {
-          DEFAULT: '#FF6B35',
-          orange: '#FF6B35',
-          'orange-light': '#F7931E',
+          DEFAULT: "var(--primary-orange)",
+          orange: "var(--primary-orange)",
+          'orange-light': "var(--accent-orange)",
           gold: '#FFD93D',
         },
-        // Semantic aliases for backwards compatibility
         primary: {
-          orange: '#FF6B35',
-          DEFAULT: '#FF6B35',
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
         secondary: {
-          orange: '#F7931E',
-          DEFAULT: '#F7931E',
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--secondary-foreground)",
         },
-        // Text colors
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
+        // Text colors map to foreground/muted equivalents
         text: {
-          DEFAULT: '#ffffff',
+          DEFAULT: "var(--foreground)",
           white: '#ffffff',
           cream: '#FFF8F0',
-          muted: '#9a9a9a',
-          gray: '#9a9a9a',
+          muted: "var(--muted-foreground)",
+          gray: "var(--muted-foreground)",
           'light-gray': '#666666',
         },
         // Utility
         border: {
-          DEFAULT: '#2a2a2a',
+          DEFAULT: "var(--border)",
         },
       },
       fontFamily: {

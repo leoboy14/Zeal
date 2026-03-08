@@ -5,13 +5,13 @@
 @layer base {
   :root {
     --background: hsl(0 0% 100%);
-    --foreground: hsl(240 10% 3.9%);
+    --foreground: hsl(240 10% 4%);
     --card: hsl(0 0% 100%);
-    --card-foreground: hsl(240 10% 3.9%);
+    --card-foreground: hsl(240 10% 4%);
     --popover: hsl(0 0% 100%);
-    --popover-foreground: hsl(240 10% 3.9%);
+    --popover-foreground: hsl(240 10% 4%);
     --primary: hsl(16 100% 50%);
-    --primary-foreground: hsl(0 0% 98%);
+    --primary-foreground: hsl(0 0% 100%);
     --secondary: hsl(240 4.8% 95.9%);
     --secondary-foreground: hsl(240 5.9% 10%);
     --muted: hsl(240 4.8% 95.9%);
@@ -25,18 +25,9 @@
     --ring: hsl(16 100% 50%);
     --radius: 0.75rem;
 
-    --sidebar: hsl(0 0% 98%);
-    --sidebar-foreground: hsl(240 5.3% 26.1%);
-    --sidebar-primary: hsl(16 100% 50%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(240 4.8% 95.9%);
-    --sidebar-accent-foreground: hsl(240 5.9% 10%);
-    --sidebar-border: hsl(240 5.9% 90%);
-    --sidebar-ring: hsl(16 100% 50%);
-
     /* Custom variables for legacy/Aceternity components - Light equivalents */
     --bg-dark: #ffffff;
-    --bg-card: #f9fafb;
+    --bg-card: #ffffff;
     --border-color: #e5e7eb;
     --primary-orange: #f97316;
     --accent-orange: #fb923c;
@@ -63,15 +54,6 @@
     --input: hsl(0 0% 15%);
     --ring: hsl(16 100% 60%);
 
-    --sidebar: hsl(0 0% 6%);
-    --sidebar-foreground: hsl(0 0% 90%);
-    --sidebar-primary: hsl(16 100% 60%);
-    --sidebar-primary-foreground: hsl(0 0% 100%);
-    --sidebar-accent: hsl(16 100% 60% / 0.1);
-    --sidebar-accent-foreground: hsl(16 100% 60%);
-    --sidebar-border: hsl(0 0% 12%);
-    --sidebar-ring: hsl(16 100% 60%);
-
     --bg-dark: #0a0a0a;
     --bg-card: #141414;
     --border-color: #2a2a2a;
@@ -90,6 +72,36 @@
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
     letter-spacing: 0.01em;
+  }
+
+  .light {
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(240 10% 4%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(240 10% 4%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 10% 4%);
+    --primary: hsl(16 100% 50%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(240 4.8% 95.9%);
+    --secondary-foreground: hsl(240 5.9% 10%);
+    --muted: hsl(240 4.8% 95.9%);
+    --muted-foreground: hsl(240 3.8% 46.1%);
+    --accent: hsl(240 4.8% 95.9%);
+    --accent-foreground: hsl(240 5.9% 10%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(240 5.9% 90%);
+    --input: hsl(240 5.9% 90%);
+    --ring: hsl(16 100% 50%);
+    --radius: 0.75rem;
+
+    /* Custom variables for legacy/Aceternity components - Light equivalents */
+    --bg-dark: #ffffff;
+    --bg-card: #ffffff;
+    --border-color: #e5e7eb;
+    --primary-orange: #f97316;
+    --accent-orange: #fb923c;
   }
 
   html {
@@ -128,24 +140,47 @@
 
   /* Glassmorphism card */
   .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  .dark .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
   }
 
   .glass-card-glow {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 107, 53, 0.2);
     border-radius: 1.5rem;
     box-shadow: 
+      0 0 0 1px rgba(255, 107, 53, 0.05),
+      0 8px 32px rgba(255, 107, 53, 0.05),
+      inset 0 0 32px rgba(255, 107, 53, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .dark .glass-card-glow {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 
       0 0 0 1px rgba(255, 107, 53, 0.1),
       0 8px 32px rgba(255, 107, 53, 0.1),
       inset 0 0 32px rgba(255, 107, 53, 0.05);
-    transition: all 0.3s ease;
+  }
+
+  .glass-card-glow:hover {
+    border-color: rgba(255, 107, 53, 0.4);
+    box-shadow: 
+      0 0 0 1px rgba(255, 107, 53, 0.15),
+      0 8px 40px rgba(255, 107, 53, 0.1),
+      inset 0 0 32px rgba(255, 107, 53, 0.05);
   }
 
   .glass-card-glow:hover {
@@ -264,13 +299,4 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
