@@ -20,7 +20,9 @@ import {
   Save,
   PlusCircle,
   X,
-  Check
+  Check,
+  Maximize,
+  Minimize
 } from 'lucide-react';
 import { backend } from '../../lib/backend';
 
@@ -99,6 +101,7 @@ export default function QAFeedbackPage() {
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [videoError, setVideoError] = useState(false);
+  const [isBigScreen, setIsBigScreen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const reselectInputRef = useRef<HTMLInputElement>(null);
@@ -519,9 +522,19 @@ export default function QAFeedbackPage() {
             )}
           </div>
         ) : (
-           <div 
-            className="relative w-full max-w-5xl aspect-video bg-white rounded-xl shadow-2xl overflow-hidden group flex items-center justify-center border border-slate-200"
-          >
+          <>
+            {isBigScreen && (
+              <div 
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[90]" 
+                onClick={() => setIsBigScreen(false)}
+              />
+            )}
+            <div 
+              className={isBigScreen 
+                ? "fixed inset-4 md:inset-10 z-[100] bg-black rounded-2xl shadow-2xl overflow-hidden group flex items-center justify-center border border-slate-800 animate-in zoom-in-95 duration-200"
+                : "relative w-full max-w-5xl aspect-video bg-white rounded-xl shadow-2xl overflow-hidden group flex items-center justify-center border border-slate-200"
+              }
+            >
             <video 
               ref={videoRef}
               src={projects.find(p => p.id === selectedProjectId)?.video_type === 'heygen' ? '' : (videoUrl || '')} 
@@ -623,7 +636,17 @@ export default function QAFeedbackPage() {
               </div>
             )}
             
+            {/* Fullscreen Toggle */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsBigScreen(!isBigScreen); }}
+              className="absolute top-4 right-4 z-40 p-2 bg-black/40 hover:bg-black/80 text-white rounded-lg backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 shadow-sm"
+              title={isBigScreen ? "Exit Big Screen" : "Big Screen view"}
+            >
+              {isBigScreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            </button>
+            
           </div>
+          </>
         ) }
       </div>
 
