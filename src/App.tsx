@@ -16,6 +16,32 @@ import QAFeedbackPage from './pages/admin/QAFeedbackPage'
 import SettingsPage from './pages/admin/SettingsPage'
 import { DashboardProvider } from './context/DashboardContext'
 
+const LOADER_SEEN_KEY = 'zeal_public_loader_seen'
+
+function isBrowserReload(): boolean {
+  if (typeof performance === 'undefined') return false
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+  return nav?.type === 'reload'
+}
+
+function hasSeenPublicLoader(): boolean {
+  try {
+    return sessionStorage.getItem(LOADER_SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markPublicLoaderSeen(): void {
+  try {
+    sessionStorage.setItem(LOADER_SEEN_KEY, '1')
+  } catch {
+    /* private / quota */
+  }
+}
+
+const PUBLIC_LOADER_MS = 1000
+
 function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
@@ -58,17 +84,26 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
   const isInternal = isAdmin;
-  const [isLoading, setIsLoading] = useState(!isInternal);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (isInternal) return false
+    if (isBrowserReload()) return false
+    if (hasSeenPublicLoader()) return false
+    return true
+  })
 
   useEffect(() => {
-    // Only show loading screen on initial mount for public pages
-    if (!isInternal) {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 2500);
-      return () => clearTimeout(timer);
+    if (isInternal) {
+      setIsLoading(false)
+      return
     }
-  }, []); // Run only once on mount
+    if (!isLoading) return
+
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+      markPublicLoaderSeen()
+    }, PUBLIC_LOADER_MS)
+    return () => clearTimeout(timer)
+  }, [isInternal, isLoading])
 
   useEffect(() => {
     // Enforce dark mode on public pages, default to light mode on admin pages

@@ -3,10 +3,12 @@ import { motion, useInView } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Footer from './Footer'
 import { Tooltip } from './ui/tooltip-card'
+import { teamPortraitStorageUrl } from '../lib/storageUrls'
 
 interface TeamMember {
   name: string
   role: string
+  /** Filename in Supabase Storage bucket (`VITE_SUPABASE_TEAM_BUCKET`), same as in `public/team/`. */
   image: string
   scale?: number
   bio?: string
@@ -16,85 +18,85 @@ const teamMembers: TeamMember[] = [
   { 
     name: 'Harhley', 
     role: 'Founder & Creative Director', 
-    image: '/team/Harhley Ponce.png',
+    image: 'Harhley Ponce.png',
     bio: 'Visionary leader who founded Zeal Highlights with a passion for storytelling and creative excellence.'
   },
   { 
     name: 'Dian', 
     role: 'Financial Chief Officer', 
-    image: '/team/Dian.png',
+    image: 'Dian.png',
   },
   { 
     name: 'Leonhel', 
     role: 'Managing Partner', 
-    image: '/team/Leo.png',
+    image: 'Leo.png',
     bio: 'Strategic partner overseeing operations and ensuring client success across all projects.'
   },
   { 
     name: 'Alvin', 
     role: 'Business Development Partner', 
-    image: '/team/Alvin.jpg',
+    image: 'Alvin.jpg',
     bio: 'Dedicated professional driving business growth and strategic partnerships.'
   },
   { 
     name: 'Jun', 
     role: 'Head of Video Production', 
-    image: '/team/Jun2.png',
+    image: 'Jun2.png',
     bio: 'Leads the production team with expertise in cinematic editing and workflow optimization.'
   },
   { 
     name: 'Jing', 
     role: 'Lead Video Editor', 
-    image: '/team/Jing Jing.png',
+    image: 'Jing Jing.png',
     bio: 'Master editor specializing in long-form content with an eye for pacing and visual storytelling.'
   },
   { 
     name: 'Angela', 
     role: 'Project Manager / Client Success', 
-    image: '/team/Angela.png',
+    image: 'Angela.png',
     bio: 'Dedicated to ensuring smooth project delivery and exceptional client communication.'
   },
   { 
     name: 'Nicko', 
     role: 'Quality Control & Delivery Specialist', 
-    image: '/team/Nicko.png', 
+    image: 'Nicko.png', 
     scale: 1.5,
     bio: 'Ensures every video meets our high standards before delivery to clients.'
   },
   { 
     name: 'Karlo', 
     role: 'Long-Form Video Editor', 
-    image: '/team/Karlo.png',
+    image: 'Karlo.png',
     bio: 'Specializes in documentary-style and educational content with attention to detail.'
   },
   { 
     name: 'Catleya', 
     role: 'Long-Form Video Editor', 
-    image: '/team/Catleya.png',
+    image: 'Catleya.png',
     bio: 'Creates engaging long-form videos with a focus on narrative flow and audience retention.'
   },
   { 
     name: 'Christian', 
     role: 'Long-Form Video Editor', 
-    image: '/team/Christian.png',
+    image: 'Christian.png',
     bio: 'Passionate editor bringing creativity and technical skill to every project.'
   },
   { 
     name: 'Donna', 
     role: 'Short-Form Video Editor', 
-    image: '/team/Donna Bael Corpuz.png',
+    image: 'Donna Bael Corpuz.png',
     bio: 'Expert in viral short-form content that captures attention in seconds.'
   },
   { 
     name: 'April', 
     role: 'Short-Form Video Editor', 
-    image: '/team/april.png',
+    image: 'april.png',
     bio: 'Creates punchy, engaging reels and shorts optimized for social media algorithms.'
   },
   { 
     name: 'Jared', 
     role: 'Short-Form Video Editor', 
-    image: '/team/Jared.png',
+    image: 'Jared.png',
     bio: 'Brings fresh creative ideas to short-form content with trending styles and effects.'
   },
 ]
@@ -226,7 +228,7 @@ const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, ind
           {/* Image Container */}
           <div className="relative aspect-[3/4] overflow-hidden">
             <img
-              src={member.image}
+              src={teamPortraitStorageUrl(member.image)}
               alt={member.name}
               className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
               style={{ transform: member.scale ? `scale(${member.scale})` : undefined }}
