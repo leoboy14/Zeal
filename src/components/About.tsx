@@ -20,10 +20,21 @@ const teamMembers: TeamMember[] = [
     bio: 'Visionary leader who founded Zeal Highlights with a passion for storytelling and creative excellence.'
   },
   { 
-    name: 'Leo', 
+    name: 'Dian', 
+    role: 'Financial Chief Officer', 
+    image: '/team/Dian.png',
+  },
+  { 
+    name: 'Leonhel', 
     role: 'Managing Partner', 
     image: '/team/Leo.png',
     bio: 'Strategic partner overseeing operations and ensuring client success across all projects.'
+  },
+  { 
+    name: 'Alvin', 
+    role: 'Business Development Partner', 
+    image: '/team/Alvin.jpg',
+    bio: 'Dedicated professional driving business growth and strategic partnerships.'
   },
   { 
     name: 'Jun', 
@@ -228,11 +239,11 @@ const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, ind
           </div>
           
           {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-            <h3 className="font-bebas text-xl md:text-2xl tracking-wider text-white group-hover:text-primary-orange transition-colors duration-300">
+          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 to-transparent pt-10">
+            <h3 className="font-bebas text-xl md:text-2xl tracking-wider text-white group-hover:text-primary-orange transition-colors duration-300 leading-none">
               {member.name}
             </h3>
-            <p className="text-text-gray text-xs md:text-sm font-light mt-1 leading-snug">
+            <p className="text-text-gray text-xs md:text-sm font-light mt-2 leading-tight min-h-[2.5rem] md:min-h-[3rem] flex items-start">
               {member.role}
             </p>
           </div>
