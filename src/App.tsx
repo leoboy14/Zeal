@@ -106,18 +106,14 @@ function AppShell({ children }: { children: React.ReactNode }) {
   }, [isInternal, isLoading])
 
   useEffect(() => {
-    // Enforce dark mode on public pages, default to light mode on admin pages
-    if (isInternal) {
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-    }
+    // Public pages use the light "cream" branding; admin also runs in light mode.
+    document.documentElement.classList.remove('dark');
   }, [isInternal]);
 
   return (
     <div
       className={
-        isInternal ? 'min-h-screen bg-background text-foreground' : 'min-h-screen bg-background-dark noise-overlay'
+        isInternal ? 'min-h-screen bg-background text-foreground' : 'min-h-screen bg-[#f4f2ed] text-[#111]'
       }
     >
       {!isInternal && <LoadingScreen isLoading={isLoading} />}

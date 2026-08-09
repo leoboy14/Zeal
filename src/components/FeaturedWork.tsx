@@ -33,7 +33,7 @@ const FeaturedWork: React.FC = () => {
         onHoverStart={() => setHoveredId(cardId)}
         onHoverEnd={() => setHoveredId(null)}
         onClick={() => setSelectedProject(project)}
-        className="group bg-background-dark rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+        className="group bg-white border border-[#e3e0d8] rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
       >
         {/* Media Container */}
         <div className={`relative overflow-hidden ${isVertical ? 'aspect-[9/16]' : 'aspect-video'}`}>
@@ -66,10 +66,10 @@ const FeaturedWork: React.FC = () => {
 
         {/* Project Info */}
         <div className={`${isVertical ? 'p-3' : 'p-4'}`}>
-          <h3 className={`text-white font-bebas tracking-wide mb-1 ${isVertical ? 'text-sm' : 'text-base'}`}>
+          <h3 className={`text-[#111] font-bebas tracking-wide mb-1 ${isVertical ? 'text-sm' : 'text-base'}`}>
             {project.title}
           </h3>
-          <span className={`text-text-light-gray uppercase tracking-widest ${isVertical ? 'text-[10px]' : 'text-xs'}`}>
+          <span className={`text-[#777] uppercase tracking-widest ${isVertical ? 'text-[10px]' : 'text-xs'}`}>
             {project.category}
           </span>
         </div>
@@ -78,13 +78,13 @@ const FeaturedWork: React.FC = () => {
   }
 
   return (
-    <section id="work" className="py-8 md:py-16 px-6 md:px-10 bg-background-card rounded-t-3xl -mt-8 relative z-20">
+    <section id="work" className="py-8 md:py-16 px-6 md:px-10 bg-[#f4f2ed] rounded-t-3xl -mt-8 relative z-20">
       {/* Films Section Header */}
       <div className="max-w-screen-2xl mx-auto mb-8">
-        <h2 className="text-2xl md:text-3xl font-bebas tracking-wider mb-2">
+        <h2 className="text-2xl md:text-3xl font-bebas tracking-wider mb-2 text-[#111]">
           FEATURED FILMS
         </h2>
-        <p className="text-text-gray text-sm font-light">
+        <p className="text-[#555] text-sm font-light">
           Cinematic storytelling with dynamic cuts and compelling narratives.
         </p>
       </div>
@@ -97,14 +97,14 @@ const FeaturedWork: React.FC = () => {
       {/* Reels Section Header */}
       <div className="max-w-screen-2xl mx-auto mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <h2 className="text-2xl md:text-3xl font-bebas tracking-wider">
+          <h2 className="text-2xl md:text-3xl font-bebas tracking-wider text-[#111]">
             REELS
           </h2>
           <span className="px-3 py-1 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-xs font-medium tracking-wide">
             VERTICAL
           </span>
         </div>
-        <p className="text-text-gray text-sm font-light">
+        <p className="text-[#555] text-sm font-light">
           Short-form content optimized for social media platforms.
         </p>
       </div>

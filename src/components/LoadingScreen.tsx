@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Logo from '../assets/logo.png';
+import Logo from '../assets/logo_zeal_black.png';
 
 interface LoadingScreenProps {
   isLoading: boolean;
@@ -14,7 +14,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading }) => {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#f4f2ed]"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

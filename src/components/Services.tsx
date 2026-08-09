@@ -212,7 +212,7 @@ const Services: React.FC = () => {
             </motion.span>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bebas tracking-wider mb-6">
-              <span className="text-white">OUR </span>
+              <span className="text-[#111]">OUR </span>
               <span className="relative inline-block">
                 <span 
                   style={{
@@ -237,7 +237,7 @@ const Services: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-text-gray text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed"
+              className="text-[#555] text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed"
             >
               Professional video editing services tailored to elevate your content 
               and captivate your audience.
@@ -261,22 +261,22 @@ const Services: React.FC = () => {
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-orange via-secondary-orange to-accent-gold rounded-2xl opacity-0 group-hover:opacity-75 blur transition-all duration-500 group-hover:duration-200" />
                 
                 {/* Card */}
-                <div className="relative h-full p-8 bg-background-card/80 backdrop-blur-xl rounded-2xl border border-white/5 group-hover:border-primary-orange/30 transition-all duration-300">
+                <div className="relative h-full p-8 bg-white backdrop-blur-xl rounded-2xl border border-[#e3e0d8] group-hover:border-primary-orange/30 transition-all duration-300">
                   {/* Icon container with gradient background */}
                   <div className="relative mb-6">
                     <div className="absolute inset-0 w-16 h-16 bg-gradient-to-br from-primary-orange/20 to-accent-gold/10 rounded-xl blur-xl" />
-                    <div className="relative w-16 h-16 flex items-center justify-center bg-background-dark/50 rounded-xl border border-white/10 group-hover:border-primary-orange/30 transition-colors duration-300">
+                    <div className="relative w-16 h-16 flex items-center justify-center bg-black/[0.04] rounded-xl border border-black/10 group-hover:border-primary-orange/30 transition-colors duration-300">
                       {service.icon}
                     </div>
                   </div>
 
                   {/* Title with hover color */}
-                  <h3 className="text-xl font-bebas tracking-wide text-white mb-3 group-hover:text-primary-orange transition-colors duration-300">
+                  <h3 className="text-xl font-bebas tracking-wide text-[#111] mb-3 group-hover:text-primary-orange transition-colors duration-300">
                     {service.title}
                   </h3>
                   
                   {/* Description */}
-                  <p className="text-text-gray text-sm leading-relaxed mb-6 font-light">
+                  <p className="text-[#555] text-sm leading-relaxed mb-6 font-light">
                     {service.description}
                   </p>
 
@@ -285,7 +285,7 @@ const Services: React.FC = () => {
                     {service.features.map((feature) => (
                       <span
                         key={feature}
-                        className="px-3 py-1 text-xs text-text-gray bg-white/5 rounded-full border border-white/10 group-hover:border-primary-orange/20 group-hover:text-primary-orange/80 transition-all duration-300"
+                        className="px-3 py-1 text-xs text-[#555] bg-black/[0.04] rounded-full border border-black/10 group-hover:border-primary-orange/20 group-hover:text-primary-orange/80 transition-all duration-300"
                       >
                         {feature}
                       </span>
@@ -312,12 +312,12 @@ const Services: React.FC = () => {
             <div className="relative inline-block p-8 md:p-12 rounded-3xl overflow-hidden">
               {/* Background gradient */}
               <div className="absolute inset-0 bg-gradient-to-r from-primary-orange/10 via-secondary-orange/5 to-accent-gold/10 rounded-3xl" />
-              <div className="absolute inset-0 border border-white/5 rounded-3xl" />
-              
-              <h3 className="relative text-2xl md:text-3xl font-bebas tracking-wide text-white mb-4">
+              <div className="absolute inset-0 border border-[#e3e0d8] rounded-3xl" />
+
+              <h3 className="relative text-2xl md:text-3xl font-bebas tracking-wide text-[#111] mb-4">
                 READY TO ELEVATE YOUR CONTENT?
               </h3>
-              <p className="relative text-text-gray mb-8 max-w-xl mx-auto font-light">
+              <p className="relative text-[#555] mb-8 max-w-xl mx-auto font-light">
                 Let's discuss your project and bring your vision to life with professional editing.
               </p>
               <Link

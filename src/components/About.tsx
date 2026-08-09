@@ -155,7 +155,7 @@ const StatCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 group overflow-hidden shadow-xl"
+      className="relative p-6 rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 group overflow-hidden shadow-xl"
     >
       {/* Gradient Glow */}
       <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
@@ -172,7 +172,7 @@ const StatCard: React.FC<{
         >
           <AnimatedCounter end={value} suffix={suffix} />
         </span>
-        <p className="text-text-gray text-sm mt-2 font-light">{label}</p>
+        <p className="text-[#555] text-sm mt-2 font-light">{label}</p>
       </div>
     </motion.div>
   )
@@ -191,13 +191,13 @@ const ValueCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 group shadow-xl"
+      className="relative p-6 rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 group shadow-xl"
     >
       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-orange/20 to-secondary-orange/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
         {icon}
       </div>
-      <h4 className="font-bebas text-xl tracking-wider text-white mb-2">{title}</h4>
-      <p className="text-text-gray text-sm font-light leading-relaxed">{description}</p>
+      <h4 className="font-bebas text-xl tracking-wider text-[#111] mb-2">{title}</h4>
+      <p className="text-[#555] text-sm font-light leading-relaxed">{description}</p>
     </motion.div>
   )
 }
@@ -224,7 +224,7 @@ const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, ind
         viewport={{ once: true }}
         className="group relative cursor-pointer"
       >
-        <div className="relative overflow-hidden rounded-2xl bg-black/40 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all duration-500 shadow-xl">
+        <div className="relative overflow-hidden rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 shadow-xl">
           {/* Image Container */}
           <div className="relative aspect-[3/4] overflow-hidden">
             <img
@@ -316,10 +316,10 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="md:col-span-2 lg:row-span-2 relative p-8 md:p-10 rounded-3xl bg-black/40 backdrop-blur-md border border-white/20 overflow-hidden group shadow-2xl"
+              className="md:col-span-2 lg:row-span-2 relative p-8 md:p-10 rounded-3xl bg-white border border-[#e3e0d8] overflow-hidden group shadow-2xl"
             >
               {/* Gradient Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-50" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/[0.04] via-transparent to-black/[0.04] opacity-50" />
               
               <div className="relative z-10">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-orange to-secondary-orange flex items-center justify-center mb-6">
@@ -328,15 +328,15 @@ const About: React.FC = () => {
                   </svg>
                 </div>
                 
-                <h2 className="font-bebas text-2xl md:text-3xl tracking-wider text-white mb-4">
+                <h2 className="font-bebas text-2xl md:text-3xl tracking-wider text-[#111] mb-4">
                   OUR <span className="text-primary-orange">MISSION</span>
                 </h2>
-                
-                <p className="text-text-gray leading-relaxed text-lg">
+
+                <p className="text-[#555] leading-relaxed text-lg">
                   Zeal Highlights is a Philippines-based video editing agency supporting clients in the US and around the world. We help content creators and businesses transform raw footage into polished, engaging videos that align with their brand and goals.
                 </p>
                 
-                <p className="text-text-gray leading-relaxed mt-4">
+                <p className="text-[#555] leading-relaxed mt-4">
                   Our agency operates with a team-based workflow, clear processes, and a strong focus on quality control. Led by experienced editors, we combine{' '}
                   <span className="text-primary-orange font-medium">creative storytelling</span> with{' '}
                   <span className="text-secondary-orange font-medium">efficient production systems</span>.
@@ -345,10 +345,10 @@ const About: React.FC = () => {
             </motion.div>
 
             {/* Stats Cards */}
-            <StatCard value={50} suffix="+" label="Projects Completed" delay={0.1} />
+            <StatCard value={500} suffix="+" label="Videos Edited" delay={0.1} />
             <StatCard value={14} label="Team Members" delay={0.2} gradient="from-gold to-accent-gold" />
-            <StatCard value={24} suffix="/7" label="Support Available" delay={0.3} gradient="from-warm to-secondary-orange" />
-            <StatCard value={10} suffix="+" label="Countries Served" delay={0.4} gradient="from-sunset to-accent-gold" />
+            <StatCard value={10} suffix="+" label="Partners" delay={0.3} gradient="from-warm to-secondary-orange" />
+            <StatCard value={24} suffix="/7" label="Support Available" delay={0.4} gradient="from-sunset to-accent-gold" />
           </div>
 
           {/* Why Choose Us Section */}
@@ -445,12 +445,12 @@ const About: React.FC = () => {
             className="relative rounded-3xl overflow-hidden"
           >
             {/* Background */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-md" />
-            <div className="absolute inset-0 border border-white/20 rounded-3xl" />
-            
+            <div className="absolute inset-0 bg-white" />
+            <div className="absolute inset-0 border border-[#e3e0d8] rounded-3xl" />
+
             {/* Content */}
             <div className="relative z-10 px-8 py-16 md:py-20 text-center">
-              <h2 className="font-bebas text-3xl md:text-4xl lg:text-5xl tracking-wider text-white mb-4">
+              <h2 className="font-bebas text-3xl md:text-4xl lg:text-5xl tracking-wider text-[#111] mb-4">
                 READY TO SCALE YOUR{' '}
                 <span 
                   style={{
@@ -463,7 +463,7 @@ const About: React.FC = () => {
                   CONTENT?
                 </span>
               </h2>
-              <p className="text-text-gray text-lg max-w-xl mx-auto mb-8">
+              <p className="text-[#555] text-lg max-w-xl mx-auto mb-8">
                 Let's discuss your project and see how we can help bring your vision to life.
               </p>
               <Link

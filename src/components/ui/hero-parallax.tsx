@@ -111,11 +111,11 @@ export const Header = () => {
   
   return (
     <div className="max-w-7xl relative mx-auto h-screen flex flex-col justify-center pt-40 md:pt-24 px-4 w-full left-0 top-0 z-50 pointer-events-none">
-      <h1 className="text-3xl md:text-5xl font-bold text-white font-bebas tracking-wider leading-none">
+      <h1 className="text-3xl md:text-5xl font-bold text-[#111] font-bebas tracking-wider leading-none">
         BRINGING <FlipWords words={heroWords} duration={2500} /> <br />
         TO LIFE THROUGH <span className="text-primary-orange">EDITING</span>
       </h1>
-      <p className="max-w-2xl text-sm md:text-lg mt-5 text-neutral-200 font-montserrat font-light leading-relaxed">
+      <p className="max-w-2xl text-sm md:text-lg mt-5 text-[#555] font-montserrat font-light leading-relaxed">
         Dynamic cuts, compelling narratives, and high-impact visuals.
         We transform raw footage into polished masterpieces that captivate audiences.
       </p>
