@@ -45,12 +45,12 @@ const CARDS: ShipCard[] = [
     bg: 'linear-gradient(180deg, #f3cdda 0%, #123a30 100%)',
   },
   {
-    id: 'highlight-reels',
-    label: 'Podcasts',
+    id: 'claymation',
+    label: 'Claymotion',
     stat: '48h',
     statSub: 'TURNAROUND',
-    thumbnail: '/thumbnails/vref-motion-graphics.webp',
-    video: 'https://vz-d016ccde-737.b-cdn.net/d3fafa35-6ec1-40c1-8034-da095ccfc91c/play_720p.mp4',
+    thumbnail: '/thumbnails/bioblade-plantar-hook.webp',
+    video: 'https://vz-d016ccde-737.b-cdn.net/8110e582-b724-41fd-a700-5a2d5b4f9a71/play_720p.mp4',
     bg: 'linear-gradient(180deg, #f0dcc0 0%, #1c2533 100%)',
   },
 ]
