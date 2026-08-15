@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 interface Project {
   title: string
@@ -16,43 +16,27 @@ import { Container, SectionHeading } from './ui/section'
 
 const FeaturedWork: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const railRef = useRef<HTMLDivElement>(null)
-  const [railProgress, setRailProgress] = useState(4)
+  // Scroll-driven rail: the section pins while vertical scroll pans the strip
+  const pinRef = useRef<HTMLDivElement>(null)
+  const stripRef = useRef<HTMLDivElement>(null)
+  const [travel, setTravel] = useState(0)
 
-  const onRailScroll = () => {
-    const el = railRef.current
-    if (!el) return
-    const max = el.scrollWidth - el.clientWidth
-    setRailProgress(max > 0 ? Math.max(4, (el.scrollLeft / max) * 100) : 4)
-  }
+  useEffect(() => {
+    const measure = () => {
+      const strip = stripRef.current
+      if (!strip) return
+      setTravel(Math.max(0, strip.scrollWidth - window.innerWidth))
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    // re-measure once media/fonts settle
+    const t = setTimeout(measure, 500)
+    return () => { window.removeEventListener('resize', measure); clearTimeout(t) }
+  }, [])
 
-  /** Drag-to-scroll: snap is disabled during the drag so it doesn't fight the pointer. */
-  const onRailPointerDown = (e: React.PointerEvent) => {
-    const el = railRef.current
-    if (!el || e.pointerType !== 'mouse') return
-    const startX = e.clientX
-    const startScroll = el.scrollLeft
-    let dragged = false
-    el.style.scrollSnapType = 'none'
-    const move = (ev: PointerEvent) => {
-      const dx = ev.clientX - startX
-      if (Math.abs(dx) > 4) dragged = true
-      el.scrollLeft = startScroll - dx
-    }
-    const up = (ev: PointerEvent) => {
-      window.removeEventListener('pointermove', move)
-      window.removeEventListener('pointerup', up)
-      el.style.scrollSnapType = ''
-      // swallow the click that follows a real drag so cards don't open
-      if (dragged) {
-        const block = (ce: Event) => { ce.stopPropagation(); ce.preventDefault() }
-        el.addEventListener('click', block, { capture: true, once: true })
-        setTimeout(() => el.removeEventListener('click', block, { capture: true } as EventListenerOptions), 0)
-      }
-    }
-    window.addEventListener('pointermove', move)
-    window.addEventListener('pointerup', up)
-  }
+  const { scrollYProgress } = useScroll({ target: pinRef, offset: ['start start', 'end end'] })
+  const x = useTransform(scrollYProgress, [0, 1], [0, -travel])
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ['4%', '100%'])
 
   // Separate landscape films from vertical reels
   const landscapeFilms = videoProjects.filter((p: Project) => !p.isVertical)
@@ -92,7 +76,7 @@ const FeaturedWork: React.FC = () => {
         <SectionHeading
           eyebrow="01 / The reel"
           title="Built for the feed — and beyond"
-          description="Shorts, ads, and long-form in one continuous strip. Drag through it."
+          description="Shorts, ads, and long-form in one continuous strip — keep scrolling to move through it."
           meta={
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#999]">
               {videoProjects.length} pieces
@@ -101,15 +85,14 @@ const FeaturedWork: React.FC = () => {
         />
       </Container>
 
-      {/* Vertical reels — draggable rail, staggered baseline, snap-scroll */}
-      <div className="relative mt-12">
-        <div
-          ref={railRef}
-          onScroll={onRailScroll}
-          onPointerDown={onRailPointerDown}
-          className="rail-scroll flex cursor-grab select-none gap-5 overflow-x-auto pb-4 active:cursor-grabbing md:gap-7"
+      {/* Scroll-driven rail: tall wrapper defines the scroll distance, sticky viewport pans the strip */}
+      <div ref={pinRef} className="relative mt-6" style={{ height: `calc(100vh + ${travel}px)` }}>
+        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <motion.div
+          ref={stripRef}
+          className="flex w-max gap-5 pb-4 md:gap-7"
           style={{
-            scrollSnapType: 'x mandatory',
+            x,
             paddingLeft: 'max(1.25rem, calc((100vw - 80rem) / 2 + 2rem))',
             paddingRight: 'max(1.25rem, calc((100vw - 80rem) / 2 + 2rem))',
           }}
@@ -123,7 +106,6 @@ const FeaturedWork: React.FC = () => {
               viewport={{ once: true }}
               onClick={() => setSelectedProject(project)}
               className={`group shrink-0 cursor-pointer ${i % 2 === 1 && project.isVertical ? 'md:mt-12' : ''}`}
-              style={{ scrollSnapAlign: 'center' }}
             >
               {/* ghost index */}
               <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#c9c5ba] transition-colors duration-300 group-hover:text-[#f97316]">
@@ -162,22 +144,23 @@ const FeaturedWork: React.FC = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* scroll progress hairline */}
         <Container className="mt-6">
           <div className="flex items-center gap-6">
             <div className="relative h-px flex-1 bg-[#e0ddd3]">
-              <div
-                className="absolute inset-y-[-1px] left-0 bg-[#f97316] transition-[width] duration-150"
-                style={{ width: `${railProgress}%` }}
+              <motion.div
+                className="absolute inset-y-[-1px] left-0 bg-[#f97316]"
+                style={{ width: progressWidth }}
               />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#999]">
-              drag to explore
+              scroll to explore
             </span>
           </div>
         </Container>
+        </div>
       </div>
 
       {/* Lightbox Modal */}

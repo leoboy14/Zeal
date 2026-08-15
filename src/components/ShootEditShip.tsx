@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import { motion, AnimatePresence, useScroll, useMotionValue, useMotionValueEvent, useSpring } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 interface ShipCard {
@@ -85,7 +86,36 @@ const ShootEditShip: React.FC = () => {
   const [active, setActive] = useState(0) // AI UGC open by default
   const [fullscreen, setFullscreen] = useState<number | null>(null)
 
-  // Which card is expanded is driven purely by hover / focus / click.
+  // The hero pins briefly while scroll steps through the four cards;
+  // hover / focus / click still override at any moment.
+  const pinRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: pinRef, offset: ['start start', 'end end'] })
+  useMotionValueEvent(scrollYProgress, 'change', (p) => {
+    if (p <= 0 || p >= 1) return
+    setActive(Math.min(CARDS.length - 1, Math.floor(p * CARDS.length)))
+  })
+
+  // Reminder text cloud: trails beside the pointer anywhere in the hero —
+  // visitors learn the cards are clickable before they even reach them.
+  const cursorX = useMotionValue(0)
+  const cursorY = useMotionValue(0)
+  const cloudX = useSpring(cursorX, { stiffness: 250, damping: 25 })
+  const cloudY = useSpring(cursorY, { stiffness: 250, damping: 25 })
+  const [cloudOn, setCloudOn] = useState(false)
+  const cloudTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Keep the reminder clear of the floating navbar at the top of the viewport
+  const CLOUD_TOP_LIMIT = 150
+
+  const flashCloud = (e: React.MouseEvent) => {
+    if (e.clientY < CLOUD_TOP_LIMIT) return
+    // jump (not spring) to the entry point so the cloud doesn't fly in from a corner
+    cursorX.jump(e.clientX + 18)
+    cursorY.jump(e.clientY + 20)
+    setCloudOn(true)
+    if (cloudTimer.current) clearTimeout(cloudTimer.current)
+    cloudTimer.current = setTimeout(() => setCloudOn(false), 3000)
+  }
 
   // Close the lightbox on Escape
   useEffect(() => {
@@ -98,7 +128,17 @@ const ShootEditShip: React.FC = () => {
   }, [fullscreen])
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#f4f2ed] text-[#111]">
+    <div ref={pinRef} className="relative" style={{ height: 'calc(100vh + 1200px)' }}>
+    <section
+      onMouseMove={(e) => {
+        if (e.clientY < CLOUD_TOP_LIMIT) { setCloudOn(false); return }
+        if (!cloudOn && cloudTimer.current === null) flashCloud(e)
+        cursorX.set(e.clientX + 18); cursorY.set(e.clientY + 20)
+      }}
+      onMouseEnter={flashCloud}
+      onMouseLeave={() => { if (cloudTimer.current) clearTimeout(cloudTimer.current); setCloudOn(false) }}
+      className="sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-[#f4f2ed] text-[#111]"
+    >
       {/* Atmosphere: warm glow + film grain */}
       <div
         aria-hidden
@@ -254,6 +294,7 @@ const ShootEditShip: React.FC = () => {
                   onFocus={() => setActive(i)}
                   onClick={() => (isActive ? setFullscreen(i) : setActive(i))}
                   transition={{ layout: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
+                  layoutId={fullscreen === null ? `hero-card-${i}` : undefined}
                   className={`group relative h-full overflow-hidden rounded-[26px] text-left outline-none focus-visible:ring-2 focus-visible:ring-[#f97316]/60 ${
                     isActive ? 'flex-none' : 'flex-1 min-w-[44px] max-w-[64px]'
                   }`}
@@ -285,6 +326,7 @@ const ShootEditShip: React.FC = () => {
                       className="absolute inset-0 h-full w-full object-cover"
                     />
                   )}
+
                   {/* Dark base so labels/stats always read */}
                   <div
                     className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#0a120e] to-transparent transition-all duration-500"
@@ -356,6 +398,7 @@ const ShootEditShip: React.FC = () => {
       </div>
 
       {/* Fullscreen video lightbox */}
+      {createPortal(
       <AnimatePresence>
         {fullscreen !== null && (
           <motion.div
@@ -364,7 +407,7 @@ const ShootEditShip: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={() => setFullscreen(null)}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
           >
             <button
               type="button"
@@ -376,25 +419,49 @@ const ShootEditShip: React.FC = () => {
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </button>
-            <motion.video
-              key={CARDS[fullscreen].video}
-              src={CARDS[fullscreen].video}
-              poster={CARDS[fullscreen].thumbnail}
-              controls
-              autoPlay
-              loop
-              playsInline
+            <motion.div
+              layoutId={`hero-card-${fullscreen}`}
+              transition={{ layout: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }}
               onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="aspect-[9/16] h-[88vh] max-w-[95vw] rounded-2xl bg-black object-cover shadow-2xl"
-            />
+              className="aspect-[9/16] h-[88vh] max-w-[95vw] overflow-hidden rounded-2xl bg-black shadow-2xl"
+            >
+              <video
+                key={CARDS[fullscreen].video}
+                src={CARDS[fullscreen].video}
+                poster={CARDS[fullscreen].thumbnail}
+                controls
+                autoPlay
+                loop
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      , document.body)}
+      {/* Reminder cloud — follows the pointer across the hero (desktop only) */}
+      <AnimatePresence>
+        {cloudOn && fullscreen === null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="pointer-events-none fixed left-0 top-0 z-[90] hidden lg:block"
+            style={{ x: cloudX, y: cloudY }}
+          >
+            <span className="flex items-center gap-2 rounded-full bg-[#111]/90 py-2 pl-3 pr-4 text-white shadow-lg ring-1 ring-white/15 backdrop-blur-sm">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M8 5v14l11-7-11-7z" fill="#f97316" />
+              </svg>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Click to watch fullscreen</span>
+            </span>
           </motion.div>
         )}
       </AnimatePresence>
     </section>
+    </div>
   )
 }
 
