@@ -47,19 +47,19 @@ const Header: React.FC = () => {
             to="/"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
           >
-            WORK
-          </Link>
-          <Link
-            to="/about"
-            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/about') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
-          >
-            ABOUT
+            HOME
           </Link>
           <Link
             to="/services"
             className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/services') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
           >
             SERVICES
+          </Link>
+          <Link
+            to="/about"
+            className={`text-sm font-medium tracking-wider transition-colors font-bebas ${isActive('/about') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
+          >
+            ABOUT
           </Link>
           <Link
             to="/contact"
@@ -104,14 +104,7 @@ const Header: React.FC = () => {
                 onClick={closeMobileMenu}
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-black/5 transition-all ${isActive('/') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
               >
-                WORK
-              </Link>
-              <Link
-                to="/about"
-                onClick={closeMobileMenu}
-                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-black/5 transition-all ${isActive('/about') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
-              >
-                ABOUT
+                HOME
               </Link>
               <Link
                 to="/services"
@@ -119,6 +112,13 @@ const Header: React.FC = () => {
                 className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-black/5 transition-all ${isActive('/services') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
               >
                 SERVICES
+              </Link>
+              <Link
+                to="/about"
+                onClick={closeMobileMenu}
+                className={`text-lg font-bebas tracking-wider text-left p-2 rounded-lg hover:bg-black/5 transition-all ${isActive('/about') ? 'text-[#f97316]' : 'text-[#111] hover:text-[#f97316]'}`}
+              >
+                ABOUT
               </Link>
               <Link
                 to="/contact"

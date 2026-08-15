@@ -1,7 +1,6 @@
 import React from 'react'
 import ShootEditShip from '../components/ShootEditShip'
 import HeroParallaxDemo from '../components/hero-parallax-demo'
-import FeaturedWork from '../components/FeaturedWork'
 import Footer from '../components/Footer'
 
 const Home: React.FC = () => {
@@ -9,7 +8,6 @@ const Home: React.FC = () => {
     <main>
       <ShootEditShip />
       <HeroParallaxDemo />
-      <FeaturedWork />
       <Footer />
     </main>
   )

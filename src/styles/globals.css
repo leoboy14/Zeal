@@ -120,6 +120,16 @@
     text-wrap: balance;
   }
 
+  /**
+   * Display face for section headings and large numerals.
+   * Swap the font-family here to change every heading on the site at once.
+   */
+  .font-display {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
@@ -323,3 +333,10 @@
   --color-accent-orange: var(--accent-orange);
   --color-accent-gold: var(--accent-gold);
 }
+/* Reels rail: hide the native scrollbar, fade the edges */
+.rail-scroll {
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+}
+.rail-scroll::-webkit-scrollbar { display: none; }

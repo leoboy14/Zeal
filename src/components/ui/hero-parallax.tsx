@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   motion,
   useScroll,
@@ -8,6 +9,7 @@ import {
   MotionValue,
 } from "framer-motion";
 import { FlipWords } from "@/components/ui/flip-words";
+import { Container } from "@/components/ui/section";
 
 export const HeroParallax = ({
   products,
@@ -50,14 +52,16 @@ export const HeroParallax = ({
     useTransform(scrollYProgress, [0, 0.2], [20, 0]),
     springConfig
   );
+  // Pull the deck up only a little: a large negative offset used to launch the
+  // cards straight over the section heading.
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-500, 0]),
+    useTransform(scrollYProgress, [0, 0.2], [-120, 0]),
     springConfig
   );
   return (
-    <div
+    <section
       ref={ref}
-      className="h-[200vh] sm:h-[220vh] py-10 md:py-20 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[150vh] sm:h-[160vh] overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -69,7 +73,7 @@ export const HeroParallax = ({
         }}
         className="relative z-10"
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-20 mb-10 md:mb-20">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-8 mb-6 md:mb-8">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -78,7 +82,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row mb-10 md:mb-20 space-x-4 md:space-x-20 ">
+        <motion.div className="flex flex-row mb-6 md:mb-8 space-x-4 md:space-x-8">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -87,7 +91,7 @@ export const HeroParallax = ({
             />
           ))}
         </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-20">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-8">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}
@@ -97,29 +101,43 @@ export const HeroParallax = ({
           ))}
         </motion.div>
       </motion.div>
-    </div>
+    </section>
   );
 };
 
 export const Header = () => {
+  // Gradients stay inside the site's orange family (see --primary-orange /
+  // --secondary-orange) so the accent reads the same as the hero's "AI."
   const heroWords = [
-    { text: "STORIES", gradient: "linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)" },
-    { text: "MOMENTS", gradient: "linear-gradient(135deg, #F7931E 0%, #FFD93D 100%)" },
-    { text: "MEMORIES", gradient: "linear-gradient(135deg, #FFD93D 0%, #FF6B35 100%)" },
-    { text: "VISIONS", gradient: "linear-gradient(135deg, #FF6B35 0%, #FFD93D 100%)" },
+    { text: "stories", gradient: "linear-gradient(135deg, #f97316 0%, #fb923c 100%)" },
+    { text: "moments", gradient: "linear-gradient(135deg, #ea6a0c 0%, #f97316 100%)" },
+    { text: "memories", gradient: "linear-gradient(135deg, #fb923c 0%, #f97316 100%)" },
+    { text: "visions", gradient: "linear-gradient(135deg, #f97316 0%, #f5a524 100%)" },
   ];
   
   return (
-    <div className="max-w-7xl relative mx-auto h-screen flex flex-col justify-center pt-40 md:pt-24 px-4 w-full left-0 top-0 z-50 pointer-events-none">
-      <h1 className="text-3xl md:text-5xl font-bold text-[#111] font-bebas tracking-wider leading-none">
-        BRINGING <FlipWords words={heroWords} duration={2500} /> <br />
-        TO LIFE THROUGH <span className="text-primary-orange">EDITING</span>
-      </h1>
-      <p className="max-w-2xl text-sm md:text-lg mt-5 text-[#555] font-montserrat font-light leading-relaxed">
-        Dynamic cuts, compelling narratives, and high-impact visuals.
-        We transform raw footage into polished masterpieces that captivate audiences.
+    <Container className="relative z-50 flex min-h-[40vh] flex-col justify-end pb-10 pt-20 md:min-h-[44vh] md:pb-14 md:pt-24 pointer-events-none">
+      <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+        01 / The reel
       </p>
-    </div>
+      <h2 className="mt-4 max-w-3xl font-display text-4xl leading-[0.95] text-[#111] sm:text-5xl lg:text-6xl">
+        Bringing <FlipWords words={heroWords} duration={2500} /> <br />
+        to life through <span className="text-primary-orange">editing</span>
+      </h2>
+      <p className="mt-5 max-w-xl text-base leading-relaxed text-[#666] md:text-lg">
+        Dynamic cuts, compelling narratives, and high-impact visuals — raw footage
+        turned into work that holds attention.
+      </p>
+      <Link
+        to="/services"
+        className="group pointer-events-auto mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#111]"
+      >
+        <span className="border-b border-[#d8d4c9] pb-0.5 transition-colors group-hover:border-[#f97316]">
+          Browse all work
+        </span>
+        <span aria-hidden className="text-[#f97316] transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+      </Link>
+    </Container>
   );
 };
 
@@ -144,11 +162,11 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-32 w-[12rem] xs:h-48 xs:w-[16rem] sm:h-72 sm:w-[24rem] md:h-96 md:w-[30rem] relative shrink-0 rounded-xl overflow-hidden"
+      className="group/product h-32 w-[12rem] xs:h-48 xs:w-[16rem] sm:h-72 sm:w-[24rem] md:h-96 md:w-[30rem] relative shrink-0 rounded-2xl overflow-hidden"
     >
       <a
         href={product.link}
-        className="block group-hover/product:shadow-2xl h-full w-full relative overflow-hidden rounded-xl"
+        className="block group-hover/product:shadow-2xl h-full w-full relative overflow-hidden rounded-2xl"
       >
         {product.video ? (
           <video
@@ -176,9 +194,10 @@ export const ProductCard = ({
         )}
       </a>
       <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-60 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none transition-opacity duration-300"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white text-sm md:text-base font-medium transition-opacity duration-300">
+      {/* Decorative hover label — not a heading, so it stays out of the outline */}
+      <p className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white text-sm md:text-base font-medium transition-opacity duration-300">
         {product.title}
-      </h2>
+      </p>
     </motion.div>
   );
 };

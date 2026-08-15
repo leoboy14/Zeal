@@ -21,8 +21,8 @@ const CARDS: ShipCard[] = [
     label: 'AI UGC',
     stat: '1.2k',
     statSub: 'ACTORS',
-    thumbnail: '/thumbnails/every-expert-purpose.webp',
-    video: 'https://vz-c804da6c-2d7.b-cdn.net/a6cdb0a9-cc05-4c6c-bd05-bedbff139974/play_720p.mp4',
+    thumbnail: '/thumbnails/greg-weiss-elevator-pitch.webp',
+    video: 'https://vz-d016ccde-737.b-cdn.net/9f8e6983-4bef-4014-9132-96b9a34d3414/play_720p.mp4',
     bg: 'linear-gradient(180deg, #1a1a1f 0%, #0d0d10 100%)',
   },
   {
@@ -30,27 +30,27 @@ const CARDS: ShipCard[] = [
     label: 'Short-form',
     stat: '9k',
     statSub: 'CLIPS CUT',
-    thumbnail: '/thumbnails/izaiah-reel.webp',
-    video: 'https://vz-c804da6c-2d7.b-cdn.net/3bd0eb97-49fb-46f6-902d-a1f53f353ca5/play_720p.mp4',
+    thumbnail: '/thumbnails/austin-reed-motion-graphics.webp',
+    video: 'https://vz-d016ccde-737.b-cdn.net/b4566447-470a-44e3-b6e7-e39b78f2cb55/play_720p.mp4',
     bg: 'linear-gradient(180deg, #bfe3e0 0%, #6b4a30 100%)',
     sample: true,
   },
   {
     id: 'brand-films',
-    label: 'Brand films',
+    label: 'UGC ads',
     stat: '320',
     statSub: 'FILMS',
-    thumbnail: '/thumbnails/tattuds-commercial.webp',
-    video: 'https://vz-c804da6c-2d7.b-cdn.net/40f8845f-f2b8-405e-8cbe-e9d46ae75d76/play_720p.mp4',
+    thumbnail: '/thumbnails/honda-after-effects.webp',
+    video: 'https://vz-d016ccde-737.b-cdn.net/078d1860-053e-46ac-bf0b-236527b7ddd3/play_720p.mp4',
     bg: 'linear-gradient(180deg, #f3cdda 0%, #123a30 100%)',
   },
   {
     id: 'highlight-reels',
-    label: 'Highlight reels',
+    label: 'Podcasts',
     stat: '48h',
     statSub: 'TURNAROUND',
-    thumbnail: '/thumbnails/min-joo-lisa-highlights.webp',
-    video: 'https://vz-c804da6c-2d7.b-cdn.net/622c9c68-c5c5-4d70-b387-bd878451058b/play_720p.mp4',
+    thumbnail: '/thumbnails/vref-motion-graphics.webp',
+    video: 'https://vz-d016ccde-737.b-cdn.net/d3fafa35-6ec1-40c1-8034-da095ccfc91c/play_720p.mp4',
     bg: 'linear-gradient(180deg, #f0dcc0 0%, #1c2533 100%)',
   },
 ]
@@ -118,8 +118,8 @@ const ShootEditShip: React.FC = () => {
         }}
       />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-5 sm:px-8 pt-28 sm:pt-32 pb-8 sm:pb-10">
-        <div className="grid flex-1 grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 items-center">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col px-5 sm:px-8 pt-24 sm:pt-28 pb-8 sm:pb-10">
+        <div className="grid flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* Left — copy */}
           <div className="max-w-xl">
             <h1 className="font-montserrat font-extrabold leading-[0.92] tracking-[-0.03em] text-[#111]">
@@ -160,7 +160,7 @@ const ShootEditShip: React.FC = () => {
               variants={fade}
               initial="hidden"
               animate="show"
-              className="mt-6 max-w-md text-lg sm:text-xl leading-relaxed text-[#666]"
+              className="mt-5 max-w-md text-lg leading-relaxed text-[#666] sm:text-xl"
             >
               From raw to ready,{' '}
               <span className="font-semibold text-[#111]">10&times; faster</span>.
@@ -172,27 +172,38 @@ const ShootEditShip: React.FC = () => {
               variants={fade}
               initial="hidden"
               animate="show"
-              className="mt-10"
+              className="mt-8"
             >
-              <Link
-                to="/contact"
-                className="group inline-flex items-center gap-3 text-base font-semibold text-[#111]"
-              >
-                <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-[#111]">
-                  Start a project
-                </span>
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f97316] text-white transition-transform duration-300 group-hover:translate-x-1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M5 12h14M13 6l6 6-6 6"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </Link>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                <Link
+                  to="/contact"
+                  className="group inline-flex items-center gap-3 text-base font-semibold text-[#111]"
+                >
+                  <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-[#111]">
+                    Start a project
+                  </span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f97316] text-white transition-transform duration-300 group-hover:translate-x-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M5 12h14M13 6l6 6-6 6"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </Link>
+                <Link
+                  to="/services"
+                  className="group inline-flex items-center gap-2 text-base font-medium text-[#666] transition-colors hover:text-[#111]"
+                >
+                  <span className="border-b border-[#d8d4c9] pb-0.5 transition-colors group-hover:border-[#111]">
+                    See the work
+                  </span>
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+                </Link>
+              </div>
             </motion.div>
 
             {/* Stats */}
@@ -201,7 +212,7 @@ const ShootEditShip: React.FC = () => {
               variants={fade}
               initial="hidden"
               animate="show"
-              className="mt-10 flex items-center gap-6 sm:gap-8"
+              className="mt-8 flex items-center gap-6 sm:gap-8"
             >
               {STATS.map((s, i) => (
                 <React.Fragment key={s.label}>
@@ -221,7 +232,7 @@ const ShootEditShip: React.FC = () => {
 
           {/* Right — expanding accordion (active card locked to 9:16) */}
           <motion.div
-            className="flex justify-center gap-3 h-[clamp(340px,44vh,440px)] lg:h-[clamp(380px,50vh,520px)]"
+            className="flex h-[clamp(320px,42vh,420px)] justify-center gap-3 lg:h-[clamp(360px,46vh,480px)]"
             initial="hidden"
             animate="show"
             variants={{
@@ -313,9 +324,9 @@ const ShootEditShip: React.FC = () => {
           variants={fade}
           initial="hidden"
           animate="show"
-          className="mt-8 sm:mt-10 border-t border-[#e7e4dc] pt-6"
+          className="mt-6 border-t border-[#e7e4dc] pt-5 sm:mt-8"
         >
-          <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+          <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
             Trusted by brands &amp; founders shipping every week
           </p>
           <div

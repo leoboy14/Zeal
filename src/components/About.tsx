@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import Footer from './Footer'
-import { Tooltip } from './ui/tooltip-card'
 import { teamPortraitStorageUrl } from '../lib/storageUrls'
+import { Container, SectionHeading } from './ui/section'
 
 interface TeamMember {
   name: string
@@ -11,101 +10,32 @@ interface TeamMember {
   /** Filename in Supabase Storage bucket (`VITE_SUPABASE_TEAM_BUCKET`), same as in `public/team/`. */
   image: string
   scale?: number
-  bio?: string
+  /** Zoom anchor as % from top — raise for tight top-cropped sources so hair stays in frame. */
+  originY?: number
 }
 
 const teamMembers: TeamMember[] = [
-  { 
-    name: 'Harhley', 
-    role: 'Founder & Creative Director', 
-    image: 'Harhley Ponce.png',
-    bio: 'Visionary leader who founded Zeal Highlights with a passion for storytelling and creative excellence.'
-  },
-  { 
-    name: 'Dian', 
-    role: 'Financial Chief Officer', 
-    image: 'Dian.png',
-  },
-  { 
-    name: 'Leonhel', 
-    role: 'Managing Partner', 
-    image: 'Leo.png',
-    bio: 'Strategic partner overseeing operations and ensuring client success across all projects.'
-  },
-  { 
-    name: 'Alvin', 
-    role: 'Business Development Partner', 
-    image: 'Alvin.jpg',
-    bio: 'Dedicated professional driving business growth and strategic partnerships.'
-  },
-  { 
-    name: 'Jun', 
-    role: 'Head of Video Production', 
-    image: 'Jun2.png',
-    bio: 'Leads the production team with expertise in cinematic editing and workflow optimization.'
-  },
-  { 
-    name: 'Jing', 
-    role: 'Lead Video Editor', 
-    image: 'Jing Jing.png',
-    bio: 'Master editor specializing in long-form content with an eye for pacing and visual storytelling.'
-  },
-  { 
-    name: 'Angela', 
-    role: 'Project Manager / Client Success', 
-    image: 'Angela.png',
-    bio: 'Dedicated to ensuring smooth project delivery and exceptional client communication.'
-  },
-  { 
-    name: 'Nicko', 
-    role: 'Quality Control & Delivery Specialist', 
-    image: 'Nicko.png', 
-    scale: 1.5,
-    bio: 'Ensures every video meets our high standards before delivery to clients.'
-  },
-  { 
-    name: 'Karlo', 
-    role: 'Long-Form Video Editor', 
-    image: 'Karlo.png',
-    bio: 'Specializes in documentary-style and educational content with attention to detail.'
-  },
-  { 
-    name: 'Catleya', 
-    role: 'Long-Form Video Editor', 
-    image: 'Catleya.png',
-    bio: 'Creates engaging long-form videos with a focus on narrative flow and audience retention.'
-  },
-  { 
-    name: 'Christian', 
-    role: 'Long-Form Video Editor', 
-    image: 'Christian.png',
-    bio: 'Passionate editor bringing creativity and technical skill to every project.'
-  },
-  { 
-    name: 'Donna', 
-    role: 'Short-Form Video Editor', 
-    image: 'Donna Bael Corpuz.png',
-    bio: 'Expert in viral short-form content that captures attention in seconds.'
-  },
-  { 
-    name: 'April', 
-    role: 'Short-Form Video Editor', 
-    image: 'april.png',
-    bio: 'Creates punchy, engaging reels and shorts optimized for social media algorithms.'
-  },
-  { 
-    name: 'Jared', 
-    role: 'Short-Form Video Editor', 
-    image: 'Jared.png',
-    bio: 'Brings fresh creative ideas to short-form content with trending styles and effects.'
-  },
+  { name: 'Harhley', role: 'Founder & Creative Director', image: 'Harhley Ponce.png', scale: 1.69 },
+  { name: 'Dian', role: 'Financial Chief Officer', image: 'Dian.png', scale: 1.28, originY: 18 },
+  { name: 'Leonhel', role: 'Managing Partner', image: 'Leo.png', scale: 1.12 },
+  { name: 'Alvin', role: 'Business Development Partner', image: 'Alvin.jpg', scale: 1.43, originY: 18 },
+  { name: 'Jun', role: 'Head of Video Production', image: 'Jun2.png', scale: 1.61, originY: 18 },
+  { name: 'Jing', role: 'Lead Video Editor', image: 'Jing Jing.png', scale: 1.54, originY: 10 },
+  { name: 'Angela', role: 'Project Manager / Client Success', image: 'Angela.png', scale: 1.29, originY: 12 },
+  { name: 'Nicko', role: 'Quality Control & Delivery Specialist', image: 'Nicko.png', scale: 2.04 },
+  { name: 'Karlo', role: 'Long-Form Video Editor', image: 'Karlo.png', scale: 1.12 },
+  { name: 'Catleya', role: 'Long-Form Video Editor', image: 'Catleya.png', scale: 1.18 },
+  { name: 'Christian', role: 'Long-Form Video Editor', image: 'Christian.png', scale: 1.14 },
+  { name: 'Donna', role: 'Short-Form Video Editor', image: 'Donna Bael Corpuz.png', scale: 1.36, originY: 8 },
+  { name: 'April', role: 'Short-Form Video Editor', image: 'april.png', scale: 1.19 },
+  { name: 'Jared', role: 'Short-Form Video Editor', image: 'Jared.png', scale: 1.12, originY: 12 },
 ]
 
-// Animated Counter Component
-const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: number }> = ({ 
-  end, 
-  suffix = '', 
-  duration = 2 
+// Animated Counter
+const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: number }> = ({
+  end,
+  suffix = '',
+  duration = 1.6,
 }) => {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
@@ -113,373 +43,247 @@ const AnimatedCounter: React.FC<{ end: number; suffix?: string; duration?: numbe
 
   useEffect(() => {
     if (!isInView) return
-
     let startTime: number
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const progress = Math.min((currentTime - startTime) / (duration * 1000), 1)
       setCount(Math.floor(progress * end))
-      if (progress < 1) {
-        requestAnimationFrame(animate)
-      }
+      if (progress < 1) requestAnimationFrame(animate)
     }
     requestAnimationFrame(animate)
   }, [isInView, end, duration])
 
   return (
     <span ref={ref}>
-      {count}{suffix}
+      {count}
+      {suffix}
     </span>
   )
 }
 
-// Stat Card Component
-const StatCard: React.FC<{ 
-  value: number; 
-  suffix?: string; 
-  label: string; 
-  delay?: number;
-  gradient?: string;
-}> = ({ value, suffix = '', label, delay = 0, gradient = 'from-primary-orange to-secondary-orange' }) => {
-  // Map gradient class to actual colors for inline style (brand colors only)
-  const getGradientColors = () => {
-    if (gradient.includes('gold')) return '#F7931E, #FFD93D';
-    if (gradient.includes('warm')) return '#FFD93D, #FF6B35';
-    if (gradient.includes('sunset')) return '#FF6B35, #FFD93D';
-    return '#FF6B35, #F7931E'; // default orange
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 group overflow-hidden shadow-xl"
-    >
-      {/* Gradient Glow */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-      
-      <div className="relative z-10">
-        <span 
-          className="font-bebas text-3xl md:text-4xl tracking-wider"
-          style={{
-            background: `linear-gradient(90deg, ${getGradientColors()})`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          <AnimatedCounter end={value} suffix={suffix} />
-        </span>
-        <p className="text-[#555] text-sm mt-2 font-light">{label}</p>
-      </div>
-    </motion.div>
-  )
+const reveal = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+  },
 }
 
-// Value Proposition Card
-const ValueCard: React.FC<{ 
-  icon: React.ReactNode; 
-  title: string; 
-  description: string; 
-  delay?: number 
-}> = ({ icon, title, description, delay = 0 }) => {
+const STATS = [
+  { value: 500, suffix: '+', label: 'videos edited' },
+  { value: 14, suffix: '', label: 'team members' },
+  { value: 10, suffix: '+', label: 'partners' },
+  { value: 24, suffix: '/7', label: 'support' },
+]
+
+const PRINCIPLES = [
+  {
+    index: '01',
+    title: 'Quality control',
+    description:
+      'Every video passes a dedicated review before it reaches you. Nothing ships on a first draft.',
+  },
+  {
+    index: '02',
+    title: 'Fast turnaround',
+    description:
+      'A team-based workflow with clear hand-offs keeps delivery quick without cutting corners.',
+  },
+  {
+    index: '03',
+    title: 'Dedicated editors',
+    description:
+      'You work with the same editors who learn your brand, your pacing, and your audience.',
+  },
+  {
+    index: '04',
+    title: 'Always on',
+    description:
+      'Philippines-based, serving the US and beyond — timezone gaps become an advantage, not a delay.',
+  },
+]
+
+// Team spotlight — one portrait at a time, avatar rail to switch
+const TeamSpotlight: React.FC = () => {
+  const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const member = teamMembers[active]
+
+  // Slow auto-advance keeps the section alive; any interaction hands over control
+  useEffect(() => {
+    if (paused) return
+    const t = setInterval(() => setActive((a) => (a + 1) % teamMembers.length), 3500)
+    return () => clearInterval(t)
+  }, [paused])
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true }}
-      className="relative p-6 rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 group shadow-xl"
+    <div
+      className="mt-12"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
-      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-orange/20 to-secondary-orange/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-        {icon}
-      </div>
-      <h4 className="font-bebas text-xl tracking-wider text-[#111] mb-2">{title}</h4>
-      <p className="text-[#555] text-sm font-light leading-relaxed">{description}</p>
-    </motion.div>
-  )
-}
-
-// Team Card Component with Tooltip
-const TeamCard: React.FC<{ member: TeamMember; index: number }> = ({ member, index }) => {
-  // Custom tooltip content for team member
-  const TooltipContent = () => (
-    <div className="max-w-[200px]">
-      <p className="font-bebas text-lg tracking-wider text-white">{member.name}</p>
-      <p className="text-xs text-primary-orange font-medium mt-0.5">{member.role}</p>
-      {member.bio && (
-        <p className="mt-2 text-xs text-text-gray leading-relaxed">{member.bio}</p>
-      )}
-    </div>
-  );
-
-  return (
-    <Tooltip content={<TooltipContent />}>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        viewport={{ once: true }}
-        className="group relative cursor-pointer"
-      >
-        <div className="relative overflow-hidden rounded-2xl bg-white border border-[#e3e0d8] hover:border-[#f97316] transition-all duration-500 shadow-xl">
-          {/* Image Container */}
-          <div className="relative aspect-[3/4] overflow-hidden">
-            <img
+      <div className="flex flex-col items-center">
+        {/* Portrait stage */}
+        <div className="relative aspect-[3/4] w-64 overflow-hidden rounded-2xl bg-[#eceae3] sm:w-72 md:w-80">
+          <AnimatePresence initial={false}>
+            <motion.img
+              key={member.name}
               src={teamPortraitStorageUrl(member.image)}
               alt={member.name}
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
-              style={{ transform: member.scale ? `scale(${member.scale})` : undefined }}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: member.scale ?? 1.12 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              style={{ transformOrigin: `50% ${member.originY ?? 28}%` }}
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
-            
-            {/* Orange Accent */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary-orange/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </div>
-          
-          {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 to-transparent pt-10">
-            <h3 className="font-bebas text-xl md:text-2xl tracking-wider text-white group-hover:text-primary-orange transition-colors duration-300 leading-none">
-              {member.name}
-            </h3>
-            <p className="text-text-gray text-xs md:text-sm font-light mt-2 leading-tight min-h-[2.5rem] md:min-h-[3rem] flex items-start">
-              {member.role}
-            </p>
-          </div>
-          
-          {/* Decorative Border Glow */}
-          <div className="absolute inset-0 rounded-2xl border-2 border-primary-orange/0 group-hover:border-primary-orange/30 transition-all duration-500 pointer-events-none" />
+          </AnimatePresence>
+          {/* index badge */}
+          <span className="absolute right-3 top-3 rounded-full bg-black/35 px-2.5 py-1 font-mono text-[10px] tracking-[0.2em] text-white backdrop-blur-sm">
+            {String(active + 1).padStart(2, '0')} / {teamMembers.length}
+          </span>
         </div>
-      </motion.div>
-    </Tooltip>
+
+        {/* Identity */}
+        <div className="mt-6 h-16 text-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={member.name}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="font-display text-3xl tracking-[-0.01em] text-[#111]">
+                {member.name}
+              </h3>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-[#999]">
+                {member.role}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Avatar rail */}
+        <div className="mt-6 flex max-w-full flex-wrap items-center justify-center gap-2.5 px-4">
+          {teamMembers.map((m, i) => (
+            <button
+              key={m.name}
+              type="button"
+              aria-label={m.name}
+              onClick={() => { setActive(i); setPaused(true) }}
+              className={`relative h-11 w-11 shrink-0 overflow-hidden rounded-full transition-all duration-300 ${
+                i === active
+                  ? 'scale-110 ring-2 ring-[#f97316] ring-offset-2 ring-offset-[#f4f1ea]'
+                  : 'opacity-55 grayscale hover:opacity-100 hover:grayscale-0'
+              }`}
+            >
+              <img
+                src={teamPortraitStorageUrl(m.image)}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover object-center"
+                style={{ transform: `scale(${m.scale ?? 1.12})`, transformOrigin: `50% ${m.originY ?? 35}%` }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
 const About: React.FC = () => {
   return (
     <>
-      <section id="about" className="pt-32 pb-20 px-6 md:px-10 relative overflow-hidden">
-        {/* Coral Orange Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-orange via-secondary-orange to-primary-orange" />
-        
-        {/* Large Background Text */}
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-          <h2 
-            className="font-bebas text-[30vw] md:text-[25vw] tracking-wider text-white/10 whitespace-nowrap select-none"
-          >
-            ABOUT US
-          </h2>
-        </div>
-        
-        {/* Subtle Pattern/Texture Overlay */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          {/* Hero Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-primary-orange font-medium text-sm tracking-widest uppercase"
-            >
-              Who We Are
-            </motion.span>
-            <h1 className="font-bebas text-4xl md:text-5xl lg:text-6xl tracking-wider text-white mt-4">
-              ABOUT{' '}
-              <span 
-                style={{
-                  background: 'linear-gradient(90deg, #FF6B35 0%, #F7931E 50%, #FF6B35 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                US
-              </span>
+      <main id="about" className="pt-36 pb-24">
+        {/* Intro */}
+        <Container>
+          <motion.div variants={reveal} initial="hidden" animate="show">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+              About
+            </p>
+            <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[0.95] tracking-[-0.02em] text-[#111] sm:text-6xl md:text-7xl">
+              A studio built for the speed of{' '}
+              <span className="text-[#f97316]">AI</span>.
             </h1>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#555]">
+              Zeal Highlights is a Philippines-based video production agency
+              serving clients in the US and around the world. We turn raw
+              footage — or no footage at all — into polished, on-brand video:
+              AI avatar ads, motion graphics, creator content, and product
+              stories.
+            </p>
           </motion.div>
 
-          {/* Bento Grid Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-20">
-            {/* Mission Statement - Large Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="md:col-span-2 lg:row-span-2 relative p-8 md:p-10 rounded-3xl bg-white border border-[#e3e0d8] overflow-hidden group shadow-2xl"
-            >
-              {/* Gradient Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/[0.04] via-transparent to-black/[0.04] opacity-50" />
-              
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-orange to-secondary-orange flex items-center justify-center mb-6">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                
-                <h2 className="font-bebas text-2xl md:text-3xl tracking-wider text-[#111] mb-4">
-                  OUR <span className="text-primary-orange">MISSION</span>
-                </h2>
-
-                <p className="text-[#555] leading-relaxed text-lg">
-                  Zeal Highlights is a Philippines-based video editing agency supporting clients in the US and around the world. We help content creators and businesses transform raw footage into polished, engaging videos that align with their brand and goals.
-                </p>
-                
-                <p className="text-[#555] leading-relaxed mt-4">
-                  Our agency operates with a team-based workflow, clear processes, and a strong focus on quality control. Led by experienced editors, we combine{' '}
-                  <span className="text-primary-orange font-medium">creative storytelling</span> with{' '}
-                  <span className="text-secondary-orange font-medium">efficient production systems</span>.
+          {/* Stats strip */}
+          <motion.div
+            variants={reveal}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.4 }}
+            className="mt-16 grid grid-cols-2 gap-y-10 border-y border-[#e7e4dc] py-10 sm:grid-cols-4"
+          >
+            {STATS.map((stat) => (
+              <div key={stat.label}>
+                <span className="font-display text-4xl tracking-[-0.02em] text-[#111] sm:text-5xl">
+                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                </span>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[#999]">
+                  {stat.label}
                 </p>
               </div>
-            </motion.div>
-
-            {/* Stats Cards */}
-            <StatCard value={500} suffix="+" label="Videos Edited" delay={0.1} />
-            <StatCard value={14} label="Team Members" delay={0.2} gradient="from-gold to-accent-gold" />
-            <StatCard value={10} suffix="+" label="Partners" delay={0.3} gradient="from-warm to-secondary-orange" />
-            <StatCard value={24} suffix="/7" label="Support Available" delay={0.4} gradient="from-sunset to-accent-gold" />
-          </div>
-
-          {/* Why Choose Us Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-20"
-          >
-            <div className="text-center mb-12">
-              <h2 className="font-bebas text-2xl md:text-3xl tracking-wider text-white">
-                WHY <span className="text-primary-orange">CHOOSE US</span>
-              </h2>
-              <p className="text-text-gray mt-3 max-w-xl mx-auto">
-                We're not just editors — we're your creative partners dedicated to making your content stand out.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              <ValueCard
-                icon={
-                  <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                }
-                title="Quality Control"
-                description="Every video goes through rigorous review to ensure it meets our high standards before delivery."
-                delay={0.1}
-              />
-              <ValueCard
-                icon={
-                  <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                }
-                title="Fast Turnaround"
-                description="We understand deadlines. Our streamlined workflow ensures quick delivery without compromising quality."
-                delay={0.2}
-              />
-              <ValueCard
-                icon={
-                  <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                }
-                title="Dedicated Team"
-                description="Work with the same editor who understands your brand, style, and content goals."
-                delay={0.3}
-              />
-              <ValueCard
-                icon={
-                  <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                }
-                title="24/7 Support"
-                description="Timezone differences? No problem. We're available around the clock to support our global clients."
-                delay={0.4}
-              />
-            </div>
+            ))}
           </motion.div>
+        </Container>
 
-          {/* Team Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-20"
-          >
-            <div className="text-center mb-12">
-              <h2 className="font-bebas text-2xl md:text-3xl tracking-wider text-white">
-                MEET THE <span className="text-primary-orange">TEAM</span>
-              </h2>
-              <p className="text-text-gray font-light max-w-2xl mx-auto mt-3">
-                Our talented team of creative professionals dedicated to bringing your vision to life.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-              {teamMembers.map((member, index) => (
-                <TeamCard key={member.name} member={member} index={index} />
-              ))}
-            </div>
-          </motion.div>
-
-          {/* CTA Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="relative rounded-3xl overflow-hidden"
-          >
-            {/* Background */}
-            <div className="absolute inset-0 bg-white" />
-            <div className="absolute inset-0 border border-[#e3e0d8] rounded-3xl" />
-
-            {/* Content */}
-            <div className="relative z-10 px-8 py-16 md:py-20 text-center">
-              <h2 className="font-bebas text-3xl md:text-4xl lg:text-5xl tracking-wider text-[#111] mb-4">
-                READY TO SCALE YOUR{' '}
-                <span 
-                  style={{
-                    background: 'linear-gradient(90deg, #FF6B35 0%, #F7931E 50%, #FF6B35 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  CONTENT?
-                </span>
-              </h2>
-              <p className="text-[#555] text-lg max-w-xl mx-auto mb-8">
-                Let's discuss your project and see how we can help bring your vision to life.
-              </p>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bebas text-xl tracking-wider text-white bg-gradient-to-r from-primary-orange to-secondary-orange hover:from-secondary-orange hover:to-primary-orange transition-all duration-300 shadow-lg shadow-primary-orange/25 hover:shadow-primary-orange/40"
+        {/* How we work */}
+        <Container className="mt-28">
+          <SectionHeading
+            eyebrow="01 / How we work"
+            title="Systems over heroics"
+            description="Clear processes, team-based editing, and a hard quality gate — creative storytelling delivered with production discipline."
+          />
+          <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {PRINCIPLES.map((item, i) => (
+              <motion.div
+                key={item.index}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                viewport={{ once: true }}
               >
-                LET'S TALK
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-      
+                <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#f97316]">
+                  {item.index}
+                </p>
+                <h3 className="mt-3 font-display text-2xl tracking-[-0.01em] text-[#111]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[#666]">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </Container>
+
+        {/* Team */}
+        <Container className="mt-28">
+          <SectionHeading
+            eyebrow="02 / Team"
+            title="The people behind it"
+            meta={
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#999]">
+                {teamMembers.length} people
+              </span>
+            }
+          />
+          <TeamSpotlight />
+        </Container>
+
+      </main>
+
       <Footer />
     </>
   )

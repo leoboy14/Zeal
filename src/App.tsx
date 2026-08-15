@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './pages/Home'
-import Services from './components/Services'
+import Work from './pages/Work'
 import About from './components/About'
 import Contact from './components/Contact'
 import LoadingScreen from './components/LoadingScreen'
@@ -57,7 +57,8 @@ function AppContent() {
       {!isInternal && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
+        <Route path="/services" element={<Work />} />
+        <Route path="/work" element={<Navigate to="/services" replace />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         

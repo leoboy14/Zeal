@@ -30,7 +30,8 @@ export default defineConfig({
     assetsInlineLimit: 4096
   },
   server: {
-    port: 3000,
+    // Honour an injected PORT (preview tooling, hosted sandboxes); default to 3000.
+    port: Number(process.env.PORT) || 3000,
     open: true,
     hmr: {
       overlay: true

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 
@@ -12,108 +12,172 @@ interface Project {
 }
 
 import { videoProjects } from '../lib/videoData'
+import { Container, SectionHeading } from './ui/section'
 
 const FeaturedWork: React.FC = () => {
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const railRef = useRef<HTMLDivElement>(null)
+  const [railProgress, setRailProgress] = useState(4)
+
+  const onRailScroll = () => {
+    const el = railRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setRailProgress(max > 0 ? Math.max(4, (el.scrollLeft / max) * 100) : 4)
+  }
+
+  /** Drag-to-scroll: snap is disabled during the drag so it doesn't fight the pointer. */
+  const onRailPointerDown = (e: React.PointerEvent) => {
+    const el = railRef.current
+    if (!el || e.pointerType !== 'mouse') return
+    const startX = e.clientX
+    const startScroll = el.scrollLeft
+    let dragged = false
+    el.style.scrollSnapType = 'none'
+    const move = (ev: PointerEvent) => {
+      const dx = ev.clientX - startX
+      if (Math.abs(dx) > 4) dragged = true
+      el.scrollLeft = startScroll - dx
+    }
+    const up = (ev: PointerEvent) => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      el.style.scrollSnapType = ''
+      // swallow the click that follows a real drag so cards don't open
+      if (dragged) {
+        const block = (ce: Event) => { ce.stopPropagation(); ce.preventDefault() }
+        el.addEventListener('click', block, { capture: true, once: true })
+        setTimeout(() => el.removeEventListener('click', block, { capture: true } as EventListenerOptions), 0)
+      }
+    }
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+  }
 
   // Separate landscape films from vertical reels
   const landscapeFilms = videoProjects.filter((p: Project) => !p.isVertical)
   const verticalReels = videoProjects.filter((p: Project) => p.isVertical)
 
-  const renderVideoCard = (project: Project, isVertical: boolean = false) => {
-    const cardId = `${project.title}-${project.category}`
-    return (
-      <motion.div
-        key={cardId}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        onHoverStart={() => setHoveredId(cardId)}
-        onHoverEnd={() => setHoveredId(null)}
-        onClick={() => setSelectedProject(project)}
-        className="group bg-white border border-[#e3e0d8] rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-      >
-        {/* Media Container */}
-        <div className={`relative overflow-hidden ${isVertical ? 'aspect-[9/16]' : 'aspect-video'}`}>
-          {/* Video with Lazy Loading */}
-          <motion.div
-            className="w-full h-full"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ amount: 0.1, margin: "200px" }}
-          >
-            <video
-              src={project.video}
-              poster={project.thumbnail}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          </motion.div>
-
-          {/* Play Overlay */}
-          <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300 ${hoveredId === cardId ? 'opacity-100' : 'opacity-0'}`}>
-            <div className={`rounded-full bg-gradient-to-r from-primary-orange to-secondary-orange flex items-center justify-center shadow-lg shadow-primary-orange/40 transition-transform group-hover:scale-110 ${isVertical ? 'w-10 h-10' : 'w-12 h-12'}`}>
-              <span className={`text-white ml-0.5 ${isVertical ? 'text-xs' : 'text-sm'}`}>▶</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Project Info */}
-        <div className={`${isVertical ? 'p-3' : 'p-4'}`}>
-          <h3 className={`text-[#111] font-bebas tracking-wide mb-1 ${isVertical ? 'text-sm' : 'text-base'}`}>
-            {project.title}
-          </h3>
-          <span className={`text-[#777] uppercase tracking-widest ${isVertical ? 'text-[10px]' : 'text-xs'}`}>
-            {project.category}
-          </span>
-        </div>
-      </motion.div>
-    )
-  }
+  // One continuous strip: verticals carry the rhythm, landscape films breathe at wide intervals
+  const railProjects = React.useMemo(() => {
+    // Hand-tuned order: the same face (Greg appears in three pieces) and the
+    // same category never sit within one glance of each other; wide films
+    // land at positions 4 and 10 as breathing room.
+    const order = [
+      'MODERN RESUME LENS',   // AI UGC (Greg avatar)
+      'BIOBLADE',             // Claymation
+      'AUSTIN REED',          // Talking Head
+      'GAINIUM',              // SaaS Demo — wide
+      'HONDA',                // UGC
+      'GREG WEISS PITCH',     // AI UGC (Greg avatar)
+      'ONEDASH HEALTHCARE',   // Ad
+      'VREF',                 // Talking Head
+      'MISSING COMPONENTS',   // Ad
+      'GREG WEISS',           // AI Avatar Course — wide (Greg avatar)
+      'FINANCE NEWS',         // Talking Head
+    ]
+    const byTitle = new Map(videoProjects.map((p) => [p.title, p]))
+    const rail = order.map((t) => byTitle.get(t)).filter(Boolean) as Project[]
+    // Anything new that isn't in the hand-tuned list still shows up at the end
+    videoProjects.forEach((p) => { if (!rail.includes(p)) rail.push(p) })
+    return rail
+  }, [])
 
   return (
-    <section id="work" className="py-8 md:py-16 px-6 md:px-10 bg-[#f4f2ed] rounded-t-3xl -mt-8 relative z-20">
-      {/* Films Section Header */}
-      <div className="max-w-screen-2xl mx-auto mb-8">
-        <h2 className="text-2xl md:text-3xl font-bebas tracking-wider mb-2 text-[#111]">
-          FEATURED FILMS
-        </h2>
-        <p className="text-[#555] text-sm font-light">
-          Cinematic storytelling with dynamic cuts and compelling narratives.
-        </p>
-      </div>
+    <section
+      id="work"
+      className="relative z-20 border-t border-[#e7e4dc] bg-[#f4f2ed] py-20 md:py-28"
+    >
+      <Container>
+        <SectionHeading
+          eyebrow="01 / The reel"
+          title="Built for the feed — and beyond"
+          description="Shorts, ads, and long-form in one continuous strip. Drag through it."
+          meta={
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#999]">
+              {videoProjects.length} pieces
+            </span>
+          }
+        />
+      </Container>
 
-      {/* Landscape Films Grid - 3 columns */}
-      <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-        {landscapeFilms.map((project) => renderVideoCard(project, false))}
-      </div>
-
-      {/* Reels Section Header */}
-      <div className="max-w-screen-2xl mx-auto mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <h2 className="text-2xl md:text-3xl font-bebas tracking-wider text-[#111]">
-            REELS
-          </h2>
-          <span className="px-3 py-1 bg-gradient-to-r from-primary-orange to-secondary-orange rounded-full text-xs font-medium tracking-wide">
-            VERTICAL
-          </span>
+      {/* Vertical reels — draggable rail, staggered baseline, snap-scroll */}
+      <div className="relative mt-12">
+        <div
+          ref={railRef}
+          onScroll={onRailScroll}
+          onPointerDown={onRailPointerDown}
+          className="rail-scroll flex cursor-grab select-none gap-5 overflow-x-auto pb-4 active:cursor-grabbing md:gap-7"
+          style={{
+            scrollSnapType: 'x mandatory',
+            paddingLeft: 'max(1.25rem, calc((100vw - 80rem) / 2 + 2rem))',
+            paddingRight: 'max(1.25rem, calc((100vw - 80rem) / 2 + 2rem))',
+          }}
+        >
+          {railProjects.map((project, i) => (
+            <motion.div
+              key={`${project.title}-${project.category}`}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: (i % 4) * 0.06 }}
+              viewport={{ once: true }}
+              onClick={() => setSelectedProject(project)}
+              className={`group shrink-0 cursor-pointer ${i % 2 === 1 && project.isVertical ? 'md:mt-12' : ''}`}
+              style={{ scrollSnapAlign: 'center' }}
+            >
+              {/* ghost index */}
+              <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#c9c5ba] transition-colors duration-300 group-hover:text-[#f97316]">
+                {String(i + 1).padStart(2, '0')}
+              </p>
+              <div
+                className={`relative mt-3 overflow-hidden rounded-2xl bg-[#111] ${
+                  project.isVertical
+                    ? 'w-[210px] sm:w-[240px] md:w-[260px]'
+                    : 'w-[663px] sm:w-[759px] md:w-[821px]'
+                }`}
+              >
+                <div className="relative h-[373px] overflow-hidden sm:h-[427px] md:h-[462px]">
+                  <video
+                    src={project.video}
+                    poster={project.thumbnail}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  />
+                  {/* bottom scrim + info live on the media itself */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pt-16 pb-4 px-4">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
+                      {project.category}
+                    </span>
+                    <h3 className="mt-1 font-display text-base leading-snug text-white">
+                      {project.title}
+                    </h3>
+                  </div>
+                  {/* hover ring */}
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[#f97316]/60" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-        <p className="text-[#555] text-sm font-light">
-          Short-form content optimized for social media platforms.
-        </p>
-      </div>
 
-      {/* Vertical Reels Grid - 4 columns on desktop, horizontal scroll on mobile */}
-      <div className="max-w-screen-2xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-          {verticalReels.map((project) => renderVideoCard(project, true))}
-        </div>
+        {/* scroll progress hairline */}
+        <Container className="mt-6">
+          <div className="flex items-center gap-6">
+            <div className="relative h-px flex-1 bg-[#e0ddd3]">
+              <div
+                className="absolute inset-y-[-1px] left-0 bg-[#f97316] transition-[width] duration-150"
+                style={{ width: `${railProgress}%` }}
+              />
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#999]">
+              drag to explore
+            </span>
+          </div>
+        </Container>
       </div>
 
       {/* Lightbox Modal */}
@@ -141,7 +205,7 @@ const FeaturedWork: React.FC = () => {
                 if (videoId) {
                   return (
                     <iframe
-                      src={`https://iframe.mediadelivery.net/embed/603046/${videoId}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`}
+                      src={`https://iframe.mediadelivery.net/embed/728256/${videoId}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`}
                       loading="lazy"
                       className="w-full h-full border-0 absolute top-0 left-0"
                       allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"

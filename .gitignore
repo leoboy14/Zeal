@@ -115,3 +115,8 @@ dist
 
 # macOS
 .DS_Store
+
+# Raw portfolio source videos (uploaded to Bunny Stream, ~1.5GB)
+Zeal Highlights Website Portfolio/
+# Local Claude Code workspace config
+.claude/

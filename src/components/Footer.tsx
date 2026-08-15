@@ -2,14 +2,15 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import logo from '../assets/logo_zeal_black.png'
+import { Container } from './ui/section'
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
 
   const quickLinks = [
-    { name: 'Work', path: '/' },
-    { name: 'About', path: '/about' },
+    { name: 'Home', path: '/' },
     { name: 'Services', path: '/services' },
+    { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ]
 
@@ -17,18 +18,61 @@ const Footer: React.FC = () => {
     <footer className="relative z-30 bg-white border-t border-[#e3e0d8]">
       {/* Gradient Top Border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-orange to-transparent" />
-      
+
+      {/* Closing CTA — the page shouldn't end on link columns */}
+      <div className="border-b border-[#e7e4dc] bg-[#f4f2ed]">
+        <Container className="py-20 md:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, amount: 0.5 }}
+            className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-end"
+          >
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+                04 / Next
+              </p>
+              <h2 className="mt-4 max-w-2xl font-display text-4xl leading-[0.95] text-[#111] sm:text-5xl lg:text-6xl">
+                Got footage?
+                <br />
+                Let&rsquo;s <span className="text-primary-orange">ship it.</span>
+              </h2>
+            </div>
+            <Link
+              to="/contact"
+              className="group inline-flex shrink-0 items-center gap-3 text-base font-semibold text-[#111]"
+            >
+              <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-[#111]">
+                Start a project
+              </span>
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-orange text-white transition-transform duration-300 group-hover:translate-x-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </Link>
+          </motion.div>
+        </Container>
+      </div>
+
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-          
+      <Container className="py-16">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
+
           {/* Left - Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="space-y-4"
+            className="space-y-4 md:col-span-5"
           >
             <Link 
               to="/" 
@@ -66,9 +110,11 @@ const Footer: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            className="space-y-4"
+            className="space-y-4 md:col-span-3"
           >
-            <h4 className="font-bebas text-lg tracking-wider text-[#111]">Quick Links</h4>
+            <h4 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+              Quick Links
+            </h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -90,9 +136,11 @@ const Footer: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="space-y-4"
+            className="space-y-4 md:col-span-4"
           >
-            <h4 className="font-bebas text-lg tracking-wider text-[#111]">Get In Touch</h4>
+            <h4 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#999]">
+              Get In Touch
+            </h4>
             <div className="space-y-4">
               {/* Email */}
               <a
@@ -147,7 +195,7 @@ const Footer: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   )
 }
