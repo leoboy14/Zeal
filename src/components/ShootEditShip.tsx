@@ -19,8 +19,8 @@ const CARDS: ShipCard[] = [
   {
     id: 'ai-ugc',
     label: 'AI UGC',
-    stat: '1.2k',
-    statSub: 'ACTORS',
+    stat: '0',
+    statSub: 'SHOOTS NEEDED',
     thumbnail: '/thumbnails/greg-weiss-elevator-pitch.webp',
     video: 'https://vz-d016ccde-737.b-cdn.net/9f8e6983-4bef-4014-9132-96b9a34d3414/play_720p.mp4',
     bg: 'linear-gradient(180deg, #1a1a1f 0%, #0d0d10 100%)',
@@ -28,8 +28,8 @@ const CARDS: ShipCard[] = [
   {
     id: 'short-form',
     label: 'Short-form',
-    stat: '9k',
-    statSub: 'CLIPS CUT',
+    stat: '9:16',
+    statSub: 'FEED-NATIVE',
     thumbnail: '/thumbnails/austin-reed-motion-graphics.webp',
     video: 'https://vz-d016ccde-737.b-cdn.net/b4566447-470a-44e3-b6e7-e39b78f2cb55/play_720p.mp4',
     bg: 'linear-gradient(180deg, #bfe3e0 0%, #6b4a30 100%)',
@@ -38,8 +38,8 @@ const CARDS: ShipCard[] = [
   {
     id: 'brand-films',
     label: 'UGC ads',
-    stat: '320',
-    statSub: 'FILMS',
+    stat: '100%',
+    statSub: 'REAL PEOPLE',
     thumbnail: '/thumbnails/honda-after-effects.webp',
     video: 'https://vz-d016ccde-737.b-cdn.net/078d1860-053e-46ac-bf0b-236527b7ddd3/play_720p.mp4',
     bg: 'linear-gradient(180deg, #f3cdda 0%, #123a30 100%)',
@@ -56,9 +56,9 @@ const CARDS: ShipCard[] = [
 ]
 
 const STATS = [
-  { value: '140', label: 'brands' },
-  { value: '12,000', label: 'projects shipped' },
-  { value: '72h', label: 'avg turnaround' },
+  { value: '500+', label: 'videos shipped' },
+  { value: '10+', label: 'brand partners' },
+  { value: '24/7', label: 'support' },
 ]
 
 // Partner / client wordmarks — swap for real <img> logos when assets land.
@@ -69,7 +69,6 @@ const PARTNERS = [
   'Balloon Boutique',
   'Smart Cities Network',
   'ABCTeachy',
-  'Insider',
   'VRef',
 ]
 
