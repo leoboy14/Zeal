@@ -34,9 +34,9 @@ const Footer: React.FC = () => {
                 04 / Next
               </p>
               <h2 className="mt-4 max-w-2xl font-display text-4xl leading-[0.95] text-[#111] sm:text-5xl lg:text-6xl">
-                Got footage?
+                Have a video in mind?
                 <br />
-                Let&rsquo;s <span className="text-primary-orange">ship it.</span>
+                Let&rsquo;s <span className="text-primary-orange">make it.</span>
               </h2>
             </div>
             <Link

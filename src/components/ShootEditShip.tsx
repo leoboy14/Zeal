@@ -123,31 +123,31 @@ const ShootEditShip: React.FC = () => {
           {/* Left — copy */}
           <div className="max-w-xl">
             <h1 className="font-montserrat font-extrabold leading-[0.92] tracking-[-0.03em] text-[#111]">
-              <span className="block overflow-hidden pb-[0.06em]">
+              <span className="block">
                 <motion.span
-                  className="block text-6xl sm:text-7xl lg:text-[7rem] will-change-transform"
-                  initial={{ y: '115%' }}
-                  animate={{ y: 0 }}
+                  className="-ml-[0.06em] block text-6xl sm:text-7xl lg:text-[7rem] will-change-transform"
+                  initial={{ y: 32, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
                 >
                   Editing
                 </motion.span>
               </span>
-              <span className="block overflow-hidden py-1">
+              <span className="block py-1">
                 <motion.span
                   className="block text-xl sm:text-2xl lg:text-3xl font-medium tracking-[-0.01em] text-[#8a8a82] will-change-transform"
-                  initial={{ y: '115%' }}
-                  animate={{ y: 0 }}
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.24 }}
                 >
                   at the speed of
                 </motion.span>
               </span>
-              <span className="block overflow-hidden pb-[0.06em]">
+              <span className="block">
                 <motion.span
-                  className="block text-6xl sm:text-7xl lg:text-[7rem] text-[#f97316] will-change-transform"
-                  initial={{ y: '115%' }}
-                  animate={{ y: 0 }}
+                  className="-ml-[0.06em] block text-6xl sm:text-7xl lg:text-[7rem] text-[#f97316] will-change-transform"
+                  initial={{ y: 32, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.36 }}
                 >
                   AI.

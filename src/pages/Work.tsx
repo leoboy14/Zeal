@@ -17,32 +17,32 @@ const SERVICES = [
   {
     index: '01',
     title: 'AI UGC & avatar ads',
-    description: 'Scroll-stopping UGC-style ads powered by AI avatars — dozens of variations, zero shoots.',
+    description: 'Realistic AI spokespeople sell your product on camera — no filming, no actors, ready in days.',
   },
   {
     index: '02',
     title: 'AI claymation & 3D',
-    description: 'Character-driven claymation and 3D spots that make products impossible to scroll past.',
+    description: 'Fun clay-style animated characters that make your product stand out and stick in people\'s minds.',
   },
   {
     index: '03',
     title: 'Motion graphics',
-    description: 'Kinetic typography, animated UI, and data-driven creative built to convert in seconds.',
+    description: 'Animated text, charts, and app screens that explain what you do in seconds.',
   },
   {
     index: '04',
     title: 'UGC & creator content',
-    description: 'Real creators, real locations — cut into high-retention, platform-native short-form.',
+    description: 'Real people filmed in real places, edited into short videos made for Instagram and TikTok.',
   },
   {
     index: '05',
     title: 'Podcast & talking head',
-    description: 'Layered talking-head edits with motion overlays, dynamic captions, and clean audio.',
+    description: 'Your podcast or on-camera videos polished up with captions, graphics, and clean sound.',
   },
   {
     index: '06',
     title: 'SaaS & product demos',
-    description: 'Founder-led demos and walkthroughs that turn features into a story worth watching.',
+    description: 'Simple walkthrough videos that show customers how your product works and why it helps.',
   },
 ]
 
@@ -60,8 +60,7 @@ const Work: React.FC = () => {
               What we make<span className="text-[#f97316]">.</span>
             </h1>
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-[#555]">
-              Six ways we produce video — every one of them proven by the work
-              below.
+              Six kinds of video we make — and real examples of each, right below.
             </p>
           </motion.div>
 
