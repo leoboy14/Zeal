@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, lazy, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './pages/Home'
@@ -7,40 +7,12 @@ import About from './components/About'
 import Contact from './components/Contact'
 import LoadingScreen from './components/LoadingScreen'
 import CursorGlow from './components/CursorGlow'
-import AdminLayout from './components/admin/AdminLayout'
-import DashboardPage from './pages/admin/DashboardPage'
-import ProjectsPage from './pages/admin/ProjectsPage'
-import ClientsPage from './pages/admin/ClientsPage'
-import EditorsPage from './pages/admin/EditorsPage'
-import QAFeedbackPage from './pages/admin/QAFeedbackPage'
-import SettingsPage from './pages/admin/SettingsPage'
-import { DashboardProvider } from './context/DashboardContext'
 
-const LOADER_SEEN_KEY = 'zeal_public_loader_seen'
+// The admin dashboard (and its Supabase/Radix dependencies) loads on demand,
+// keeping the public bundle small.
+const AdminRoot = lazy(() => import('./pages/admin/AdminRoot'))
 
-function isBrowserReload(): boolean {
-  if (typeof performance === 'undefined') return false
-  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
-  return nav?.type === 'reload'
-}
-
-function hasSeenPublicLoader(): boolean {
-  try {
-    return sessionStorage.getItem(LOADER_SEEN_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-function markPublicLoaderSeen(): void {
-  try {
-    sessionStorage.setItem(LOADER_SEEN_KEY, '1')
-  } catch {
-    /* private / quota */
-  }
-}
-
-const PUBLIC_LOADER_MS = 1000
+const PUBLIC_LOADER_MS = 1750
 
 function AppContent() {
   const location = useLocation();
@@ -63,19 +35,15 @@ function AppContent() {
         <Route path="/contact" element={<Contact />} />
         
         
-        {/* Admin Routes */}
-        <Route path="/admin" element={
-          <DashboardProvider>
-            <AdminLayout />
-          </DashboardProvider>
-        }>
-          <Route index element={<DashboardPage />} />
-          <Route path="projects" element={<ProjectsPage />} />
-          <Route path="clients" element={<ClientsPage />} />
-          <Route path="editors" element={<EditorsPage />} />
-          <Route path="qa" element={<QAFeedbackPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
+        {/* Admin Routes (lazy-loaded chunk) */}
+        <Route
+          path="/admin/*"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-background" />}>
+              <AdminRoot />
+            </Suspense>
+          }
+        />
       </Routes>
     </>
   );
@@ -86,10 +54,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const isAdmin = location.pathname.startsWith('/admin');
   const isInternal = isAdmin;
   const [isLoading, setIsLoading] = useState(() => {
-    if (isInternal) return false
-    if (isBrowserReload()) return false
-    if (hasSeenPublicLoader()) return false
-    return true
+    // Loader plays on every page load, including refreshes.
+    return !isInternal
   })
 
   useEffect(() => {
@@ -101,7 +67,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
     const timer = setTimeout(() => {
       setIsLoading(false)
-      markPublicLoaderSeen()
     }, PUBLIC_LOADER_MS)
     return () => clearTimeout(timer)
   }, [isInternal, isLoading])
@@ -118,7 +83,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
       }
     >
       {!isInternal && <LoadingScreen isLoading={isLoading} />}
-      {(!isLoading || isInternal) && children}
+      {/* Children mount immediately — the opaque loader covers them, so the
+          hero poster, fonts and first video start fetching during the intro. */}
+      {children}
     </div>
   );
 }

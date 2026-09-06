@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import logo from '../assets/logo_zeal_black.png'
+import logo from '../assets/logo-mark.webp'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 

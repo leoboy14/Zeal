@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { AnimatePresence, motion, useInView } from 'framer-motion'
 import Footer from './Footer'
-import { teamPortraitStorageUrl } from '../lib/storageUrls'
+// Portraits are optimized WebP served statically from public/team — far
+// smaller and CDN-cached, so no Supabase Storage round trip.
+const teamPortraitUrl = (file: string) => `/team/${encodeURIComponent(file)}`
 import { Container, SectionHeading } from './ui/section'
 
 interface TeamMember {
@@ -15,20 +17,20 @@ interface TeamMember {
 }
 
 const teamMembers: TeamMember[] = [
-  { name: 'Harhley', role: 'Founder & Creative Director', image: 'Harhley Ponce.png', scale: 1.69 },
-  { name: 'Dian', role: 'Financial Chief Officer', image: 'Dian.png', scale: 1.28, originY: 18 },
-  { name: 'Leonhel', role: 'Managing Partner', image: 'Leo.png', scale: 1.12 },
-  { name: 'Alvin', role: 'Business Development Partner', image: 'Alvin.jpg', scale: 1.43, originY: 18 },
-  { name: 'Jun', role: 'Head of Video Production', image: 'Jun2.png', scale: 1.61, originY: 18 },
-  { name: 'Jing', role: 'Lead Video Editor', image: 'Jing Jing.png', scale: 1.54, originY: 10 },
-  { name: 'Angela', role: 'Project Manager / Client Success', image: 'Angela.png', scale: 1.29, originY: 12 },
-  { name: 'Nicko', role: 'Quality Control & Delivery Specialist', image: 'Nicko.png', scale: 2.04 },
-  { name: 'Karlo', role: 'Long-Form Video Editor', image: 'Karlo.png', scale: 1.12 },
-  { name: 'Catleya', role: 'Long-Form Video Editor', image: 'Catleya.png', scale: 1.18 },
-  { name: 'Christian', role: 'Long-Form Video Editor', image: 'Christian.png', scale: 1.14 },
-  { name: 'Donna', role: 'Short-Form Video Editor', image: 'Donna Bael Corpuz.png', scale: 1.36, originY: 8 },
-  { name: 'April', role: 'Short-Form Video Editor', image: 'april.png', scale: 1.19 },
-  { name: 'Jared', role: 'Short-Form Video Editor', image: 'Jared.png', scale: 1.12, originY: 12 },
+  { name: 'Harhley', role: 'Founder & Creative Director', image: 'Harhley Ponce.webp', scale: 1.69 },
+  { name: 'Dian', role: 'Financial Chief Officer', image: 'Dian.webp', scale: 1.28, originY: 18 },
+  { name: 'Leonhel', role: 'Managing Partner', image: 'Leo.webp', scale: 1.12 },
+  { name: 'Alvin', role: 'Business Development Partner', image: 'Alvin.webp', scale: 1.43, originY: 18 },
+  { name: 'Jun', role: 'Head of Video Production', image: 'Jun2.webp', scale: 1.61, originY: 18 },
+  { name: 'Jing', role: 'Lead Video Editor', image: 'Jing Jing.webp', scale: 1.54, originY: 10 },
+  { name: 'Angela', role: 'Project Manager / Client Success', image: 'Angela.webp', scale: 1.29, originY: 12 },
+  { name: 'Nicko', role: 'Quality Control & Delivery Specialist', image: 'Nicko.webp', scale: 2.04 },
+  { name: 'Karlo', role: 'Long-Form Video Editor', image: 'Karlo.webp', scale: 1.12 },
+  { name: 'Catleya', role: 'Long-Form Video Editor', image: 'Catleya.webp', scale: 1.18 },
+  { name: 'Christian', role: 'Long-Form Video Editor', image: 'Christian.webp', scale: 1.14 },
+  { name: 'Donna', role: 'Short-Form Video Editor', image: 'Donna Bael Corpuz.webp', scale: 1.36, originY: 8 },
+  { name: 'April', role: 'Short-Form Video Editor', image: 'april.webp', scale: 1.19 },
+  { name: 'Jared', role: 'Short-Form Video Editor', image: 'Jared.webp', scale: 1.12, originY: 12 },
 ]
 
 // Animated Counter
@@ -129,8 +131,9 @@ const TeamSpotlight: React.FC = () => {
           <AnimatePresence initial={false}>
             <motion.img
               key={member.name}
-              src={teamPortraitStorageUrl(member.image)}
+              src={teamPortraitUrl(member.image)}
               alt={member.name}
+              decoding="async"
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: member.scale ?? 1.12 }}
               exit={{ opacity: 0 }}
@@ -180,7 +183,7 @@ const TeamSpotlight: React.FC = () => {
               }`}
             >
               <img
-                src={teamPortraitStorageUrl(m.image)}
+                src={teamPortraitUrl(m.image)}
                 alt=""
                 loading="lazy"
                 className="h-full w-full object-cover object-center"

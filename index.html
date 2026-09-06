@@ -4,8 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="canonical" href="https://www.zealhighlights.com/">
     <title>Zeal Highlights — Editing at the Speed of AI</title>
     <meta name="description" content="AI avatar ads, motion graphics, short-form, and product videos — made fast, made to convert.">
     
@@ -23,11 +27,24 @@
     <meta name="twitter:description" content="AI avatar ads, motion graphics, short-form, and product videos — made fast, made to convert.">
     <meta name="twitter:image" content="https://www.zealhighlights.com/og-image.png">
     
+    <!-- Hero LCP assets: fetch the default-active card poster during HTML
+         parse, and warm the video CDN connection. -->
+    <link rel="preload" as="image" href="/thumbnails/greg-weiss-elevator-pitch.webp" fetchpriority="high">
+    <link rel="preconnect" href="https://vz-d016ccde-737.b-cdn.net">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts load async (media=print swap) so first paint never blocks on
+         fonts.googleapis.com; 800/900 added so hero + loader weights are real,
+         not synthesized. -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 </head>
 
 <body>

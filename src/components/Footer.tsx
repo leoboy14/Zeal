@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import logo from '../assets/logo_zeal_black.png'
+import logo from '../assets/logo-mark.webp'
 import { Container } from './ui/section'
 
 const Footer: React.FC = () => {

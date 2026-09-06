@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 
 interface Project {
   title: string
@@ -13,6 +13,40 @@ interface Project {
 
 import { videoProjects } from '../lib/videoData'
 import { Container, SectionHeading } from './ui/section'
+
+/**
+ * Poster-first video: the real <video> mounts only once the card first
+ * approaches the viewport, so the rail doesn't fetch every stream at load.
+ */
+const LazyAutoplayVideo: React.FC<{
+  src: string
+  poster?: string
+  className: string
+}> = ({ src, poster, className }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '25% 0px 25% 0px' })
+
+  return (
+    <div ref={ref} className="h-full w-full">
+      {inView ? (
+        <video
+          src={src}
+          poster={poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className={className}
+        />
+      ) : poster ? (
+        <img src={poster} loading="lazy" decoding="async" alt="" className={className} />
+      ) : (
+        <div className={className} />
+      )}
+    </div>
+  )
+}
 
 const FeaturedWork: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -119,14 +153,9 @@ const FeaturedWork: React.FC = () => {
                 }`}
               >
                 <div className="relative h-[373px] overflow-hidden sm:h-[427px] md:h-[462px]">
-                  <video
+                  <LazyAutoplayVideo
                     src={project.video}
                     poster={project.thumbnail}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   />
                   {/* bottom scrim + info live on the media itself */}

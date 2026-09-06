@@ -6,6 +6,7 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  useInView,
   MotionValue,
 } from "framer-motion";
 import { FlipWords } from "@/components/ui/flip-words";
@@ -61,7 +62,7 @@ export const HeroParallax = ({
   return (
     <section
       ref={ref}
-      className="h-[150vh] sm:h-[160vh] overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="min-h-[150vh] sm:min-h-[160vh] overflow-x-hidden pb-24 md:pb-32 antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
     >
       <Header />
       <motion.div
@@ -153,8 +154,14 @@ export const ProductCard = ({
   };
   translate: MotionValue<number>;
 }) => {
+  // Videos are heavy: keep the poster until the card first approaches the
+  // viewport, then mount (and keep) the autoplaying video.
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, margin: "25% 0px 25% 0px" });
+
   return (
     <motion.div
+      ref={cardRef}
       style={{
         x: translate,
       }}
@@ -168,7 +175,7 @@ export const ProductCard = ({
         href={product.link}
         className="block group-hover/product:shadow-2xl h-full w-full relative overflow-hidden rounded-2xl"
       >
-        {product.video ? (
+        {product.video && inView ? (
           <video
             src={product.video}
             poster={product.thumbnail}
@@ -178,6 +185,14 @@ export const ProductCard = ({
             playsInline
             autoPlay
             preload="metadata"
+          />
+        ) : product.video ? (
+          <img
+            src={product.thumbnail}
+            loading="lazy"
+            decoding="async"
+            className="object-cover object-center absolute h-full w-full inset-0"
+            alt={product.title}
           />
         ) : (
           <img

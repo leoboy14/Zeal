@@ -23,7 +23,13 @@ export default defineConfig({
         main: './index.html'
       },
       output: {
-        manualChunks: undefined
+        // Long-lived vendor chunks: app copy tweaks no longer cache-bust
+        // react/framer-motion for returning visitors. The admin subtree
+        // splits automatically via its React.lazy() import.
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion']
+        }
       }
     },
     cssCodeSplit: true,

@@ -18,8 +18,7 @@ import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'; // Might not be installed, but I'll add an SR-only class instead just in case.
-import Logo from '../../assets/logo.png';
-import LogoBlack from '../../assets/logo_zeal_black.png';
+import LogoBlack from '../../assets/logo-mark.webp';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
@@ -56,8 +55,7 @@ export default function AdminSidebar({
       )}>
         <div className={cn("flex items-center gap-2.5 overflow-hidden", isCollapsed && "justify-center")}>
           <div className="w-6 h-6 flex items-center justify-center shrink-0 overflow-hidden relative rounded-sm bg-foreground/5 p-1">
-             <img src={LogoBlack} alt="Zeal Logo Mark Light" className="w-full h-auto object-contain dark:hidden" />
-             <img src={Logo} alt="Zeal Logo Mark Dark" className="w-full h-auto object-contain hidden dark:block" />
+             <img src={LogoBlack} alt="Zeal Logo Mark" className="w-full h-auto object-contain" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col truncate">

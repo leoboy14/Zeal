@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useScroll, useMotionValue, useMotionValueEvent, useSpring } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { CLIENTS, ClientLogo } from './Clients'
 
 interface ShipCard {
   id: string
@@ -60,17 +61,6 @@ const STATS = [
   { value: '500+', label: 'videos shipped' },
   { value: '10+', label: 'brand partners' },
   { value: '24/7', label: 'support' },
-]
-
-// Partner / client wordmarks — swap for real <img> logos when assets land.
-const PARTNERS = [
-  'Tattuds',
-  'Bioblade',
-  'Claymotion',
-  'Balloon Boutique',
-  'Smart Cities Network',
-  'ABCTeachy',
-  'VRef',
 ]
 
 const fade = {
@@ -382,13 +372,8 @@ const ShootEditShip: React.FC = () => {
             <div className="flex w-max animate-marquee">
               {[0, 1].map((track) => (
                 <div key={track} className="flex items-center" aria-hidden={track === 1}>
-                  {PARTNERS.map((name) => (
-                    <span
-                      key={`${track}-${name}`}
-                      className="shrink-0 whitespace-nowrap px-8 sm:px-10 font-montserrat text-lg sm:text-xl font-bold tracking-tight text-[#9a978d] transition-colors duration-300 hover:text-[#111]"
-                    >
-                      {name}
-                    </span>
+                  {CLIENTS.map((client) => (
+                    <ClientLogo key={`${track}-${client.name}`} client={client} />
                   ))}
                 </div>
               ))}
