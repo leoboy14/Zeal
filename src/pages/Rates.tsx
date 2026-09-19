@@ -282,8 +282,105 @@ const Rates: React.FC = () => {
     }
   }
 
+  const today = new Date().toLocaleDateString('en-PH', { day: 'numeric', month: 'long', year: 'numeric' })
+
   return (
-    <main className="min-h-screen bg-[#f4f2ed] text-[#111] lg:h-screen lg:overflow-hidden">
+    <>
+      {/* Print: hide the interactive app and lay out the quote sheet instead. */}
+      <style>{`
+        @media print {
+          @page { size: A4; margin: 18mm; }
+          html, body { background: #fff !important; }
+          .app-view { display: none !important; }
+          .print-view { display: block !important; }
+        }
+      `}</style>
+
+      {/* Quote sheet — print only */}
+      <section className="print-view hidden text-[#111]">
+        <header className="flex items-end justify-between border-b-2 border-[#111] pb-3">
+          <div>
+            <h1 className="font-display text-3xl tracking-[-0.02em]">Zeal Rates.</h1>
+            <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-[#666]">Quotation</p>
+          </div>
+          <div className="text-right text-[11px] leading-relaxed text-[#666]">
+            <p>{today}</p>
+            <p>Philippine pesos</p>
+            <p>Valid 90 days</p>
+          </div>
+        </header>
+
+        {quote.lines.length === 0 ? (
+          <p className="mt-6 text-sm text-[#666]">No items selected.</p>
+        ) : (
+          <table className="mt-6 w-full border-collapse text-left">
+            <thead>
+              <tr className="border-b border-[#ccc]">
+                <th className="pb-2 text-[10px] font-normal uppercase tracking-[0.2em] text-[#888]">Item</th>
+                <th className="pb-2 text-right text-[10px] font-normal uppercase tracking-[0.2em] text-[#888]">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quote.lines.map((l) => (
+                <tr key={l.label} className="border-b border-[#eee]">
+                  <td className="py-2.5 align-top text-sm">
+                    {l.label}
+                    {l.detail && <span className="block text-[11px] text-[#888]">{l.detail}</span>}
+                  </td>
+                  <td className="py-2.5 text-right align-top text-sm font-semibold tabular-nums">{peso(l.amount)}</td>
+                </tr>
+              ))}
+              <tr className="border-t-2 border-[#111]">
+                <td className="pt-3 text-[10px] uppercase tracking-[0.2em] text-[#666]">Total{quote.hasFrom ? ' · from' : ''}</td>
+                <td className="pt-3 text-right font-display text-2xl tabular-nums">{peso(quote.total)}</td>
+              </tr>
+            </tbody>
+          </table>
+        )}
+
+        {medium && (
+          <div className="mt-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Included in every trailer</p>
+            <ul className="mt-2 columns-2 gap-8 text-[11px] leading-relaxed text-[#333]">
+              {INCLUDED.map((i) => (
+                <li key={i}>· {i}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {site && (
+          <div className="mt-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Website process</p>
+            <ol className="mt-2 space-y-1 text-[11px] leading-relaxed text-[#333]">
+              {PROCESS.map(([t, b], i) => (
+                <li key={t}>
+                  {i + 1}. <span className="font-semibold">{t}</span> — {b}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        <div className="mt-8">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Terms</p>
+          <dl className="mt-2 text-[11px] leading-relaxed text-[#333]">
+            {TERMS.map(([k, v]) => (
+              <div key={k} className="flex gap-3 py-0.5">
+                <dt className="w-40 shrink-0 text-[#888]">{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <p className="mt-8 border-t border-[#eee] pt-3 text-[10px] leading-relaxed text-[#888]">
+          All figures are standing rates in Philippine pesos, not estimates. Add-ons are confirmed in writing before production
+          continues. Website store packages are quoted from a starting price.
+        </p>
+      </section>
+
+    <main className="app-view min-h-screen bg-[#f4f2ed] text-[#111] lg:h-screen lg:overflow-hidden">
       <div className="mx-auto flex h-full w-full max-w-6xl flex-col px-4 py-5 sm:px-6">
         {/* Header */}
         <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
@@ -587,6 +684,7 @@ const Rates: React.FC = () => {
         </a>
       )}
     </main>
+    </>
   )
 }
 
