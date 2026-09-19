@@ -11,13 +11,15 @@ import CursorGlow from './components/CursorGlow'
 // The admin dashboard (and its Supabase/Radix dependencies) loads on demand,
 // keeping the public bundle small.
 const AdminRoot = lazy(() => import('./pages/admin/AdminRoot'))
+// Standalone, unbranded rate card — no header, loader or cursor glow.
+const Rates = lazy(() => import('./pages/Rates'))
 
 const PUBLIC_LOADER_MS = 1750
 
 function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
-  const isInternal = isAdmin;
+  const isInternal = isAdmin || location.pathname === '/rates';
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,8 +35,15 @@ function AppContent() {
         <Route path="/work" element={<Navigate to="/services" replace />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        
-        
+        <Route
+          path="/rates"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-[#f4f2ed]" />}>
+              <Rates />
+            </Suspense>
+          }
+        />
+
         {/* Admin Routes (lazy-loaded chunk) */}
         <Route
           path="/admin/*"
@@ -52,7 +61,7 @@ function AppContent() {
 function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
-  const isInternal = isAdmin;
+  const isInternal = isAdmin || location.pathname === '/rates';
   const [isLoading, setIsLoading] = useState(() => {
     // Loader plays on every page load, including refreshes.
     return !isInternal
