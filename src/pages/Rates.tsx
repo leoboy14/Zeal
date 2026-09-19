@@ -133,7 +133,7 @@ const Check: React.FC<{ on: boolean }> = ({ on }) => (
   <span
     aria-hidden
     className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
-      on ? 'border-[#111] bg-[#111] text-white' : 'border-[#cfcbc2] bg-white'
+      on ? 'border-[#f97316] bg-[#f97316] text-white' : 'border-[#cfcbc2] bg-white'
     }`}
   >
     {on && (
@@ -305,7 +305,7 @@ const Rates: React.FC = () => {
                   type="button"
                   onClick={() => setTab(t)}
                   className={`-mb-px border-b-2 px-2 pb-2 text-xs capitalize transition-colors ${
-                    tab === t ? 'border-[#111] text-[#111]' : 'border-transparent text-[#999] hover:text-[#111]'
+                    tab === t ? 'border-[#f97316] text-[#111]' : 'border-transparent text-[#999] hover:text-[#111]'
                   }`}
                 >
                   {t === 'trailers' ? 'Book trailers' : 'Author websites'}
@@ -327,14 +327,14 @@ const Rates: React.FC = () => {
                           onClick={() => setMedium(on ? null : m)}
                           aria-pressed={on}
                           className={`rounded-lg border p-3 text-left transition-colors ${
-                            on ? 'border-[#111] bg-[#111] text-white' : 'border-[#e7e4dc] hover:border-[#999]'
+                            on ? 'border-[#f97316] bg-[#fff6ee]' : 'border-[#e7e4dc] hover:border-[#999]'
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-medium">{TRAILER[m].label}</span>
                             <span className="text-sm font-semibold tabular-nums">{peso(TRAILER[m].price[runtime])}</span>
                           </div>
-                          <p className={`mt-1 text-[11px] leading-snug ${on ? 'text-white/70' : 'text-[#777]'}`}>{TRAILER[m].blurb}</p>
+                          <p className={`mt-1 text-[11px] leading-snug text-[#777]`}>{TRAILER[m].blurb}</p>
                         </button>
                       )
                     })}
@@ -350,7 +350,7 @@ const Rates: React.FC = () => {
                           onClick={() => setRuntime(r)}
                           aria-pressed={runtime === r}
                           className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
-                            runtime === r ? 'border-[#111] bg-[#f4f2ed]' : 'border-[#e7e4dc] text-[#666] hover:border-[#999]'
+                            runtime === r ? 'border-[#f97316] bg-[#fff6ee] text-[#111]' : 'border-[#e7e4dc] text-[#666] hover:border-[#999]'
                           }`}
                         >
                           {r}s
@@ -427,7 +427,7 @@ const Rates: React.FC = () => {
                             <li key={st.title} className="relative pb-4 last:pb-0">
                               <span
                                 className={`absolute -left-7 top-0.5 h-4 w-4 rounded-full border-2 border-white ${
-                                  i === STAGES.length - 1 ? 'bg-[#111]' : 'bg-[#f97316]'
+                                  i === STAGES.length - 1 ? 'bg-[#f97316]' : 'bg-[#f97316]/40'
                                 }`}
                               />
                               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
@@ -467,16 +467,16 @@ const Rates: React.FC = () => {
                           onClick={() => setSite(on ? null : s.id)}
                           aria-pressed={on}
                           className={`rounded-lg border p-3 text-left transition-colors ${
-                            on ? 'border-[#111] bg-[#111] text-white' : 'border-[#e7e4dc] hover:border-[#999]'
+                            on ? 'border-[#f97316] bg-[#fff6ee]' : 'border-[#e7e4dc] hover:border-[#999]'
                           }`}
                         >
                           <span className="block text-xs font-medium">{s.label}</span>
                           <span className="mt-1 block text-sm font-semibold tabular-nums">
-                            {s.from && <span className={`mr-1 text-[10px] ${on ? 'text-white/60' : 'text-[#999]'}`}>from</span>}
+                            {s.from && <span className={`mr-1 text-[10px] text-[#999]`}>from</span>}
                             {peso(s.price)}
                           </span>
-                          <span className={`block text-[10px] ${on ? 'text-white/60' : 'text-[#999]'}`}>{s.days} business days</span>
-                          <ul className={`mt-2 space-y-0.5 text-[11px] leading-snug ${on ? 'text-white/80' : 'text-[#666]'}`}>
+                          <span className={`block text-[10px] text-[#999]`}>{s.days} business days</span>
+                          <ul className={`mt-2 space-y-0.5 text-[11px] leading-snug text-[#666]`}>
                             {s.features.map((f) => (
                               <li key={f}>· {f}</li>
                             ))}
@@ -552,7 +552,7 @@ const Rates: React.FC = () => {
               )}
             </div>
 
-            <div className="mt-3 border-t border-[#111] pt-3">
+            <div className="mt-3 border-t border-[#e7e4dc] pt-3">
               <div className="flex items-baseline justify-between">
                 <Label className="text-[#666]">Total{quote.hasFrom ? ' · from' : ''}</Label>
                 <p className="font-display text-2xl tabular-nums">{peso(quote.total)}</p>
@@ -563,7 +563,7 @@ const Rates: React.FC = () => {
                   type="button"
                   onClick={copySummary}
                   disabled={quote.lines.length === 0}
-                  className="rounded-md bg-[#111] px-3 py-2 text-xs text-white transition-colors hover:bg-[#f97316] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-md bg-[#f97316] px-3 py-2 text-xs text-white transition-colors hover:bg-[#ea6a0f] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {copied ? 'Copied' : 'Copy summary'}
                 </button>
