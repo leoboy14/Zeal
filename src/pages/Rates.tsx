@@ -23,7 +23,7 @@ const TRAILER: Record<Medium, { label: string; blurb: string; price: Record<Runt
   },
   animated: {
     label: 'Animated',
-    blurb: "Illustrated or stylised. Uses the book's own artwork where it exists.",
+    blurb: 'Illustrated or stylised. Uses your existing artwork where it exists.',
     price: { 60: 4000, 90: 6000, 120: 7500 },
   },
 }
@@ -31,7 +31,7 @@ const TRAILER: Record<Medium, { label: string; blurb: string; price: Record<Runt
 const INCLUDED = [
   'Storyboard with three revision rounds',
   'Three revision rounds on the final video',
-  'Voiceover cast to the book and its reader',
+  'Voiceover cast to the brand and its audience',
   'Credits, end card and call to action',
   'Landscape 16:9 master, 1080p',
   'Fully AI-generated, no stock footage',
@@ -58,7 +58,7 @@ const ADD_ONS: AddOn[] = [
   { id: 'rewrite', stage: 0, label: 'Script rewrite after approval', price: 1000, basis: 'Resets storyboard and voiceover' },
   { id: 'voice', stage: 0, label: 'Alternate voice or voice re-cast', price: 800, basis: 'After voice approval' },
   { id: 'captions', stage: 3, label: 'Second-language captions', price: 800, basis: 'Per language', unit: 'languages' },
-  { id: 'avatar', stage: 2, label: 'Talking author avatar or presenter', price: 1500, basis: 'Per video', unit: 'videos' },
+  { id: 'avatar', stage: 2, label: 'Talking avatar or presenter', price: 1500, basis: 'Per video', unit: 'videos' },
 ]
 
 const TERMS = [
@@ -80,25 +80,25 @@ interface SitePackage {
 const SITES: SitePackage[] = [
   {
     id: 'landing',
-    label: 'Author Landing',
+    label: 'Landing',
     price: 15000,
     days: 7,
-    features: ['One page: bio, book, buy links', 'Contact form and social links', 'Mobile-responsive, basic SEO', 'Domain and hosting setup'],
+    features: ['Single-page site', 'Contact form and social links', 'Mobile-responsive', 'Domain and hosting setup'],
   },
   {
     id: 'pro',
-    label: 'Author Pro',
+    label: 'Pro',
     price: 30000,
     days: 14,
-    features: ['Everything in Author Landing', 'Up to five pages, multiple books', 'Blog and newsletter signup', 'Analytics and social integration'],
+    features: ['Everything in Landing', 'Multiple pages', 'Blog and newsletter signup', 'Analytics and social integration'],
   },
   {
     id: 'store',
-    label: 'Publisher / Store',
+    label: 'Business / Store',
     price: 55000,
     from: true,
     days: 21,
-    features: ['All of Author Pro', 'Up to ten pages', 'Online store with payments', 'Content management system', 'Handover training'],
+    features: ['All of Pro', 'Larger multi-page site', 'Online store with payments', 'Content management system', 'Handover training'],
   },
 ]
 
@@ -110,7 +110,7 @@ const PROCESS = [
 
 /** Production timeline. Add-ons reference the stage where they can arise. */
 const STAGES = [
-  { title: 'Script & voice', rounds: 0, included: ['Script from the book', 'Voice cast to the book and its reader'] },
+  { title: 'Script & voice', rounds: 0, included: ['Script from your brief', 'Voice cast to the brand'] },
   { title: 'Storyboard', rounds: 3, included: ['Scene list and visuals', 'Sign-off locks the script and scenes'] },
   { title: 'Video', rounds: 3, included: ['Fully AI-generated footage, no stock'] },
   { title: 'Delivery', rounds: 0, included: ['16:9 master, 1080p', 'Credits, end card, call to action'] },
@@ -222,7 +222,7 @@ const Rates: React.FC = () => {
       const unit = TRAILER[medium].price[runtime]
       packagePrice = unit * videos
       lines.push({
-        label: `${TRAILER[medium].label} trailer · ${runtime}s`,
+        label: `${TRAILER[medium].label} video · ${runtime}s`,
         detail: `${videos} × ${peso(unit)}`,
         amount: packagePrice,
       })
@@ -340,7 +340,7 @@ const Rates: React.FC = () => {
 
         {medium && (
           <div className="mt-8">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Included in every trailer</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Included in every video</p>
             <ul className="mt-2 columns-2 gap-8 text-[11px] leading-relaxed text-[#333]">
               {INCLUDED.map((i) => (
                 <li key={i}>· {i}</li>
@@ -405,7 +405,7 @@ const Rates: React.FC = () => {
                     tab === t ? 'border-[#f97316] text-[#111]' : 'border-transparent text-[#999] hover:text-[#111]'
                   }`}
                 >
-                  {t === 'trailers' ? 'Book trailers' : 'Author websites'}
+                  {t === 'trailers' ? 'Videos' : 'Websites'}
                 </button>
               ))}
             </div>
@@ -494,7 +494,7 @@ const Rates: React.FC = () => {
 
                   {/* Fine print */}
                   <div className="mt-4">
-                    <Fold title="Included in every trailer">
+                    <Fold title="Included in every video">
                       <ul className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2">
                         {INCLUDED.map((i) => (
                           <li key={i} className="flex items-center gap-2">
@@ -633,7 +633,7 @@ const Rates: React.FC = () => {
 
             <div className="min-h-0 flex-1 overflow-y-auto">
               {quote.lines.length === 0 ? (
-                <p className="mt-3 text-xs leading-relaxed text-[#999]">Nothing selected yet. Pick a trailer medium, tick add-ons, or choose a website package.</p>
+                <p className="mt-3 text-xs leading-relaxed text-[#999]">Nothing selected yet. Pick a video style, tick add-ons, or choose a website package.</p>
               ) : (
                 <ul className="mt-2">
                   {quote.lines.map((l) => (
