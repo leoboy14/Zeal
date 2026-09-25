@@ -175,7 +175,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading }) => {
           transition={{ duration: 0.7, ease }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-[#f4f2ed]"
         >
-          {/* BISECT */}<span>BISECT</span>
+          <KineticTextGrid />
 
           {/* Soft vignette so the outer rows fade instead of hard-cropping */}
           <div
