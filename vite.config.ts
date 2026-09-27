@@ -20,7 +20,8 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       input: {
-        main: './index.html'
+        main: './index.html',
+        web: './web.html'
       },
       output: {
         // Long-lived vendor chunks: app copy tweaks no longer cache-bust

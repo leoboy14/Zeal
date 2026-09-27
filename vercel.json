@@ -1,5 +1,16 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    {
+      "src": "/(index\\.html)?",
+      "has": [{ "type": "host", "value": "web.zealhighlights.com" }],
+      "dest": "/web.html"
+    },
+    { "handle": "filesystem" },
+    {
+      "src": "/(.*)",
+      "has": [{ "type": "host", "value": "web.zealhighlights.com" }],
+      "dest": "/web.html"
+    },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
