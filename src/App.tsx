@@ -13,6 +13,22 @@ import CursorGlow from './components/CursorGlow'
 const AdminRoot = lazy(() => import('./pages/admin/AdminRoot'))
 // Standalone, unbranded rate card — no header, loader or cursor glow.
 const Rates = lazy(() => import('./pages/Rates'))
+// Zeal Dev landing page — /web on the main domain, and the whole site on
+// web.zealhighlights.com. Own header/footer; no loader or cursor glow.
+const WebLanding = lazy(() => import('./pages/WebLanding'))
+
+/** True on the web.* subdomain (web.zealhighlights.com, web.localhost, …). */
+const IS_WEB_HOST =
+  typeof window !== 'undefined' && window.location.hostname.startsWith('web.')
+
+const isWebLandingPath = (pathname: string) =>
+  IS_WEB_HOST || pathname === '/web' || pathname.startsWith('/web/')
+
+const webLandingElement = (
+  <Suspense fallback={<div className="min-h-screen bg-[#f4f2ed]" />}>
+    <WebLanding />
+  </Suspense>
+)
 
 const PUBLIC_LOADER_MS = 1750
 
@@ -20,21 +36,32 @@ function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
   const isInternal = isAdmin || location.pathname === '/rates';
+  const hideChrome = isInternal || isWebLandingPath(location.pathname);
   
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  // On web.zealhighlights.com every path renders the Zeal Dev landing page.
+  if (IS_WEB_HOST) {
+    return (
+      <Routes>
+        <Route path="*" element={webLandingElement} />
+      </Routes>
+    );
+  }
+
   return (
     <>
-      {!isInternal && <CursorGlow />}
-      {!isInternal && <Header />}
+      {!hideChrome && <CursorGlow />}
+      {!hideChrome && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Work />} />
         <Route path="/work" element={<Navigate to="/services" replace />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/web/*" element={webLandingElement} />
         <Route
           path="/rates"
           element={
@@ -62,13 +89,15 @@ function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
   const isInternal = isAdmin || location.pathname === '/rates';
+  // The Zeal Dev landing keeps the cream public styling but skips the loader.
+  const skipLoader = isInternal || isWebLandingPath(location.pathname);
   const [isLoading, setIsLoading] = useState(() => {
     // Loader plays on every page load, including refreshes.
-    return !isInternal
+    return !skipLoader
   })
 
   useEffect(() => {
-    if (isInternal) {
+    if (skipLoader) {
       setIsLoading(false)
       return
     }
@@ -78,7 +107,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
       setIsLoading(false)
     }, PUBLIC_LOADER_MS)
     return () => clearTimeout(timer)
-  }, [isInternal, isLoading])
+  }, [skipLoader, isLoading])
 
   useEffect(() => {
     // Public pages use the light "cream" branding; admin also runs in light mode.
@@ -91,7 +120,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
         isInternal ? 'min-h-screen bg-background text-foreground' : 'min-h-screen bg-[#f4f2ed] text-[#111]'
       }
     >
-      {!isInternal && <LoadingScreen isLoading={isLoading} />}
+      {!skipLoader && <LoadingScreen isLoading={isLoading} />}
       {/* Children mount immediately — the opaque loader covers them, so the
           hero poster, fonts and first video start fetching during the intro. */}
       {children}
