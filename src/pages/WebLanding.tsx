@@ -4,11 +4,14 @@ import WebHeader, { NAV, ZealMark, scrollToSection } from '../components/web/Web
 import ShowcaseVideo from '../components/web/ShowcaseVideo'
 import SiteFrame from '../components/web/SiteFrame'
 import { ActivityField } from '../components/web/ActivityField'
+import Typewriter from '../components/web/Typewriter'
+import ServicesShowcase from '../components/web/ServicesShowcase'
 import { CLIENTS, ClientLogo } from '../components/Clients'
 import {
   CONTACT_URL,
   EMAIL,
   FAQ,
+  HERO_PHRASES,
   HUMAN_AI,
   MAIN_SITE_URL,
   MAX_DAYS,
@@ -26,7 +29,7 @@ import {
 const EASE = [0.22, 1, 0.36, 1] as const
 const TITLE = 'Zeal Dev — Human developers, AI speed'
 const DESCRIPTION =
-  'Websites that look and feel like your brand, live in days, not months. Designed and built by real developers, sped up by AI.'
+  'Websites, funnels and automations that look and work like your brand. Designed and built by real developers, sped up by AI.'
 const CANONICAL = 'https://web.zealhighlights.com/'
 
 // ---------------------------------------------------------------------------
@@ -221,22 +224,25 @@ const Hero: React.FC = () => (
 
       <motion.h1
         variants={heroRise}
+        aria-label="Human developers building websites, sales funnels, automations and CRM setups at AI speed."
         className="text-[clamp(2.1rem,8.6vw,6.75rem)] font-bold leading-[1] tracking-[-0.045em] text-[#111]"
       >
         <span className="whitespace-nowrap">
-          Human developers.
-          <span aria-hidden className="web-caret ml-[0.05em] inline-block h-[0.8em] w-[0.055em] translate-y-[0.06em] rounded-[1px] bg-[#f97316] align-baseline" />
+          <Typewriter
+            phrases={HERO_PHRASES}
+            caretClassName="ml-[0.05em] inline-block h-[0.8em] w-[0.055em] translate-y-[0.06em] rounded-[1px] bg-[#f97316] align-baseline"
+          />
         </span>
         <br />
-        <span className="text-[#f97316]">AI speed.</span>
+        <span aria-hidden className="text-[#f97316]">AI speed.</span>
       </motion.h1>
 
       <motion.p
         variants={heroRise}
         className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-[#6b6862] [text-wrap:balance] sm:text-lg"
       >
-        A website that looks and feels like your brand, live in days, not months. Real designers
-        and developers craft every page, and AI takes the busywork off their hands.
+        Websites, funnels and automations built around your brand, live in days, not
+        months. Real designers and developers do the work, and AI takes the busywork off their hands.
       </motion.p>
 
       <motion.div variants={heroRise} className="mt-9 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
@@ -272,6 +278,26 @@ const Showreel: React.FC = () => (
   </section>
 )
 
+/** What we build — the services the hero typewriter cycles through. */
+const Services: React.FC = () => (
+  <section id="services" aria-labelledby="services-title" className="scroll-mt-24 pt-24 sm:pt-32">
+    <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <SectionTitle
+        eyebrow="What we build"
+        title={
+          <span id="services-title">
+            More than a website.<br />
+            <Accent>Everything behind it.</Accent>
+          </span>
+        }
+        lede="A good-looking site is the start. We also set up the funnels, CRM and automations that turn visitors into booked calls and paying customers."
+      />
+
+      <ServicesShowcase />
+    </div>
+  </section>
+)
+
 /** How the team and AI split the work — the proof behind the headline. */
 const HumanAi: React.FC = () => (
   <section aria-labelledby="human-ai-title" className="py-24 sm:py-32">
@@ -287,31 +313,23 @@ const HumanAi: React.FC = () => (
         lede="Every Zeal site is designed and built by real people who get to know your brand. AI is a tool in their hands, never a replacement for them. That’s how you get a site that feels like yours, faster."
       />
 
-      <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
+      <div className="mt-14 grid grid-cols-1 divide-y divide-black/[0.08] border-y border-black/[0.08] md:grid-cols-2 md:divide-x md:divide-y-0">
         {HUMAN_AI.map((col, i) => (
           <Reveal key={col.title} delay={i * 0.1} className="h-full">
-            <div
-              className={`h-full rounded-[22px] border p-6 sm:p-8 ${
-                col.human
-                  ? 'border-black/[0.07] bg-white shadow-[0_20px_50px_-34px_rgba(17,17,17,0.35)]'
-                  : 'border-[#f97316]/25 bg-[#fff7f0]'
-              }`}
-            >
+            <div className={`h-full py-10 md:py-12 ${i === 0 ? 'md:pr-10 lg:pr-14' : 'md:pl-10 lg:pl-14'}`}>
               <div className="flex items-center gap-3">
                 <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                    col.human ? 'bg-[#111] text-white' : 'bg-gradient-to-br from-[#ea580c] to-[#fdba74] text-white'
-                  }`}
+                  className={`flex h-8 w-8 items-center justify-center ${col.human ? 'text-[#111]' : 'text-[#f97316]'}`}
                   aria-hidden
                 >
                   {col.human ? (
-                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
                       <circle cx="12" cy="8" r="3.5" />
                       <path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" />
                     </svg>
                   ) : (
-                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-                      <path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z" />
+                    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 2.5 4.5 13.5h6.5l-1 8 8.5-11h-6.5l1-8Z" />
                     </svg>
                   )}
                 </span>
@@ -700,6 +718,7 @@ const WebLanding: React.FC = () => {
         <main>
           <Hero />
           <Showreel />
+          <Services />
           <HumanAi />
           <Trusted />
           <Work />

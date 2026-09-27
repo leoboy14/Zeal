@@ -160,3 +160,34 @@ export const HUMAN_AI = [
     ],
   },
 ]
+
+/** Line 1 of the hero headline cycles through these; line 2 stays "AI speed." Keep each ≤ 17 chars so it fits one line on phones. */
+export const HERO_PHRASES = [
+  'Human developers.',
+  'Custom websites.',
+  'Sales funnels.',
+  'Automations.',
+  'CRM setups.',
+]
+
+/** "What we build": the services behind the typewriter. */
+export const SERVICES = [
+  {
+    id: 'websites',
+    title: 'Websites',
+    blurb: 'Custom sites designed around your brand, from a single landing page to a full online store.',
+    items: ['Landing pages and multi-page sites', 'Online stores with payments', 'Content you can edit yourself'],
+  },
+  {
+    id: 'funnels',
+    title: 'Funnels & CRM',
+    blurb: 'Leads captured, tracked and followed up in one place, on the platform that suits you, including GoHighLevel.',
+    items: ['Sales funnels and landing pages', 'CRM pipelines and calendars', 'Forms, surveys and booking flows'],
+  },
+  {
+    id: 'automation',
+    title: 'Automations',
+    blurb: 'The repetitive follow-up handled for you, so your team spends time on customers, not copy-paste.',
+    items: ['Email and SMS follow-up sequences', 'Lead routing and notifications', 'Connecting your forms, CRM and tools'],
+  },
+]

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CONTACT_URL } from './content'
 
 export const NAV = [
+  { id: 'services', label: 'Services' },
   { id: 'work', label: 'Work' },
   { id: 'packages', label: 'Packages' },
   { id: 'process', label: 'Process' },
