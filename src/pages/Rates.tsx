@@ -83,7 +83,7 @@ const SITES: SitePackage[] = [
     label: 'Landing',
     price: 15000,
     days: 7,
-    features: ['Single-page site', 'Contact form and social links', 'Mobile-responsive', 'Domain and hosting setup'],
+    features: ['Single-page site', 'Contact form and social links', 'Mobile-responsive', 'Domain and hosting set up for you'],
   },
   {
     id: 'pro',
@@ -105,7 +105,7 @@ const SITES: SitePackage[] = [
 const PROCESS = [
   ['Sitemap & mockup', 'Homepage design and page map approved before any build. Two revision rounds.'],
   ['Build', 'Developed to the approved mockup. Two revision rounds on the built site.'],
-  ['Launch', 'Domain connected, hosting live, handover notes. Domain and hosting billed at cost.'],
+  ['Launch', 'Domain connected, hosting live, handover notes. Domain and hosting are paid by you, direct to the provider.'],
 ]
 
 /** Production timeline. Add-ons reference the stage where they can arise. */
@@ -150,10 +150,15 @@ const CURRENCIES: Currency[] = [
   { code: 'SGD', symbol: 'S$', name: 'Singapore dollars', rate: 0.023, step: 5, locale: 'en-SG' },
 ]
 
-/** Convert a PHP amount into `c`, rounded up to that currency's step. */
+/**
+ * Convert a PHP amount into `c`, rounding up to a step that grows with the
+ * figure, so add-ons stay precise while packages land on round numbers.
+ */
 const convert = (php: number, c: Currency) => {
   if (c.code === 'PHP') return php
-  return Math.ceil((php * c.rate) / c.step) * c.step
+  const raw = php * c.rate
+  const step = raw >= 500 ? c.step * 20 : raw >= 200 ? c.step * 10 : raw >= 50 ? c.step * 2 : c.step
+  return Math.ceil(raw / step) * step
 }
 
 const format = (php: number, c: Currency) => `${c.symbol}${convert(php, c).toLocaleString(c.locale)}`
@@ -742,7 +747,7 @@ const Rates: React.FC = () => {
                     </li>
                     <li className="border-t border-[#f0ede6] py-1.5">
                       <span className="block text-xs text-[#222]">Domain &amp; hosting</span>
-                      <span className="block text-[10px] text-[#999]">Billed at cost, no markup</span>
+                      <span className="block text-[10px] text-[#999]">Paid by you direct to the provider, renewed yearly. Not included above.</span>
                     </li>
                   </ul>
 
