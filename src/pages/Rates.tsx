@@ -158,6 +158,71 @@ const convert = (php: number, c: Currency) => {
 
 const format = (php: number, c: Currency) => `${c.symbol}${convert(php, c).toLocaleString(c.locale)}`
 
+/** Countries that bill in euros, for the region lookup below. */
+const EURO_COUNTRIES = new Set([
+  'AD', 'AT', 'BE', 'CY', 'DE', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'IE', 'IT',
+  'LT', 'LU', 'LV', 'MC', 'MT', 'NL', 'PT', 'SI', 'SK', 'SM', 'VA',
+])
+
+/** Country code to currency, for the countries we quote in directly. */
+const COUNTRY_CURRENCY: Record<string, CurrencyCode> = {
+  PH: 'PHP',
+  US: 'USD',
+  GB: 'GBP',
+  AU: 'AUD',
+  NZ: 'AUD',
+  SG: 'SGD',
+  MY: 'SGD',
+}
+
+/** IANA timezones mapped to a country, covering the zones we expect to see. */
+const ZONE_COUNTRY: Record<string, string> = {
+  'Asia/Manila': 'PH',
+  'Asia/Singapore': 'SG',
+  'Asia/Kuala_Lumpur': 'MY',
+  'Europe/London': 'GB',
+  'Australia/Sydney': 'AU',
+  'Australia/Melbourne': 'AU',
+  'Australia/Brisbane': 'AU',
+  'Australia/Perth': 'AU',
+  'Australia/Adelaide': 'AU',
+  'Pacific/Auckland': 'NZ',
+}
+
+/**
+ * Best guess at the visitor's currency, from their timezone first and their
+ * browser locale second. Anything we don't recognise falls back to US dollars
+ * if the visitor is clearly outside the Philippines, otherwise pesos.
+ */
+const detectCurrency = (): CurrencyCode => {
+  const fromCountry = (country?: string): CurrencyCode | undefined => {
+    if (!country) return undefined
+    const upper = country.toUpperCase()
+    if (COUNTRY_CURRENCY[upper]) return COUNTRY_CURRENCY[upper]
+    if (EURO_COUNTRIES.has(upper)) return 'EUR'
+    return undefined
+  }
+
+  try {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const byZone = fromCountry(ZONE_COUNTRY[zone])
+    if (byZone) return byZone
+
+    // A region subtag like "en-AU" or "de-DE" is the next best signal.
+    for (const tag of navigator.languages ?? [navigator.language]) {
+      const region = new Intl.Locale(tag).maximize().region
+      const byRegion = fromCountry(region)
+      if (byRegion) return byRegion
+    }
+
+    // Unrecognised but clearly not Philippine time — quote in dollars.
+    if (zone && !zone.startsWith('Asia/Manila')) return 'USD'
+  } catch {
+    /* detection unavailable — fall through to the default */
+  }
+  return 'PHP'
+}
+
 const Label: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <p className={`font-mono text-[10px] uppercase tracking-[0.22em] text-[#999] ${className}`}>{children}</p>
 )
@@ -229,25 +294,29 @@ const Rates: React.FC = () => {
 
   const [copied, setCopied] = useState(false)
   const [tab, setTab] = useState<Tab>('trailers')
+  // A currency the visitor picked themselves always wins over detection.
+  const [picked, setPicked] = useState(false)
   const [currencyCode, setCurrencyCode] = useState<CurrencyCode>(() => {
     try {
       const saved = localStorage.getItem('rates:currency')
       if (saved && CURRENCIES.some((c) => c.code === saved)) return saved as CurrencyCode
     } catch {
-      /* storage unavailable — fall back to PHP */
+      /* storage unavailable — detect instead */
     }
-    return 'PHP'
+    return detectCurrency()
   })
   const currency = CURRENCIES.find((c) => c.code === currencyCode) ?? CURRENCIES[0]
   const peso = (n: number) => format(n, currency)
 
+  // Only remember a deliberate choice, so detection stays live until then.
   useEffect(() => {
+    if (!picked) return
     try {
       localStorage.setItem('rates:currency', currencyCode)
     } catch {
       /* storage unavailable — selection just won't persist */
     }
-  }, [currencyCode])
+  }, [picked, currencyCode])
 
   // Keep the tab title generic — this page carries no branding.
   useEffect(() => {
@@ -447,7 +516,10 @@ const Rates: React.FC = () => {
               <span className="sr-only">Currency</span>
               <select
                 value={currencyCode}
-                onChange={(e) => setCurrencyCode(e.target.value as CurrencyCode)}
+                onChange={(e) => {
+                  setPicked(true)
+                  setCurrencyCode(e.target.value as CurrencyCode)
+                }}
                 className="cursor-pointer rounded-md border border-[#e7e4dc] bg-white px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-[#333] transition-colors hover:border-[#f97316] focus:border-[#f97316] focus:outline-none"
               >
                 {CURRENCIES.map((c) => (
