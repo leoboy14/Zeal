@@ -123,7 +123,40 @@ const EXTRA_PAGE = 2500
 // Helpers
 // ---------------------------------------------------------------------------
 
-const peso = (n: number) => `₱${n.toLocaleString('en-PH')}`
+/**
+ * Currencies. All rates are authored in PHP; other currencies are converted
+ * at a fixed indicative rate and rounded so quotes stay legible. Update
+ * `rate` when the board agrees a new conversion.
+ */
+type CurrencyCode = 'PHP' | 'USD' | 'EUR' | 'AUD' | 'GBP' | 'SGD'
+
+interface Currency {
+  code: CurrencyCode
+  symbol: string
+  name: string
+  /** Units of this currency per 1 PHP. */
+  rate: number
+  /** Round converted amounts up to this step. */
+  step: number
+  locale: string
+}
+
+const CURRENCIES: Currency[] = [
+  { code: 'PHP', symbol: '₱', name: 'Philippine pesos', rate: 1, step: 1, locale: 'en-PH' },
+  { code: 'USD', symbol: '$', name: 'US dollars', rate: 0.017, step: 5, locale: 'en-US' },
+  { code: 'EUR', symbol: '€', name: 'euros', rate: 0.016, step: 5, locale: 'en-IE' },
+  { code: 'GBP', symbol: '£', name: 'pounds sterling', rate: 0.013, step: 5, locale: 'en-GB' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian dollars', rate: 0.026, step: 5, locale: 'en-AU' },
+  { code: 'SGD', symbol: 'S$', name: 'Singapore dollars', rate: 0.023, step: 5, locale: 'en-SG' },
+]
+
+/** Convert a PHP amount into `c`, rounded up to that currency's step. */
+const convert = (php: number, c: Currency) => {
+  if (c.code === 'PHP') return php
+  return Math.ceil((php * c.rate) / c.step) * c.step
+}
+
+const format = (php: number, c: Currency) => `${c.symbol}${convert(php, c).toLocaleString(c.locale)}`
 
 const Label: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <p className={`font-mono text-[10px] uppercase tracking-[0.22em] text-[#999] ${className}`}>{children}</p>
@@ -196,6 +229,25 @@ const Rates: React.FC = () => {
 
   const [copied, setCopied] = useState(false)
   const [tab, setTab] = useState<Tab>('trailers')
+  const [currencyCode, setCurrencyCode] = useState<CurrencyCode>(() => {
+    try {
+      const saved = localStorage.getItem('rates:currency')
+      if (saved && CURRENCIES.some((c) => c.code === saved)) return saved as CurrencyCode
+    } catch {
+      /* storage unavailable — fall back to PHP */
+    }
+    return 'PHP'
+  })
+  const currency = CURRENCIES.find((c) => c.code === currencyCode) ?? CURRENCIES[0]
+  const peso = (n: number) => format(n, currency)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rates:currency', currencyCode)
+    } catch {
+      /* storage unavailable — selection just won't persist */
+    }
+  }, [currencyCode])
 
   // Keep the tab title generic — this page carries no branding.
   useEffect(() => {
@@ -252,7 +304,7 @@ const Rates: React.FC = () => {
     const total = lines.reduce((s, l) => s + l.amount, 0)
     const hasFrom = Boolean(pkg?.from)
     return { lines, total, hasFrom }
-  }, [medium, runtime, videos, addOns, rush, site, extraPages, maintenanceMonths])
+  }, [medium, runtime, videos, addOns, rush, site, extraPages, maintenanceMonths, currency])
 
   const reset = () => {
     setMedium(null)
@@ -271,7 +323,7 @@ const Rates: React.FC = () => {
       ...quote.lines.map((l) => `${l.label}${l.detail ? ` (${l.detail})` : ''}: ${peso(l.amount)}`),
       `TOTAL${quote.hasFrom ? ' (from)' : ''}: ${peso(quote.total)}`,
       '',
-      'Rates in Philippine pesos. Website store package is a starting price.',
+      `Rates in ${currency.name}. Website store package is a starting price.`,
     ].join('\n')
     try {
       await navigator.clipboard.writeText(text)
@@ -282,7 +334,7 @@ const Rates: React.FC = () => {
     }
   }
 
-  const today = new Date().toLocaleDateString('en-PH', { day: 'numeric', month: 'long', year: 'numeric' })
+  const today = new Date().toLocaleDateString(currency.locale, { day: 'numeric', month: 'long', year: 'numeric' })
 
   return (
     <>
@@ -305,7 +357,7 @@ const Rates: React.FC = () => {
           </div>
           <div className="text-right text-[11px] leading-relaxed text-[#666]">
             <p>{today}</p>
-            <p>Philippine pesos</p>
+            <p className="capitalize">{currency.name}</p>
             <p>Valid 90 days</p>
           </div>
         </header>
@@ -375,8 +427,9 @@ const Rates: React.FC = () => {
         </div>
 
         <p className="mt-8 border-t border-[#eee] pt-3 text-[10px] leading-relaxed text-[#888]">
-          All figures are standing rates in Philippine pesos, not estimates. Add-ons are confirmed in writing before production
-          continues. Website store packages are quoted from a starting price.
+          All figures are standing rates, not estimates. Add-ons are confirmed in writing before production continues. Website
+          store packages are quoted from a starting price.
+          {currency.code !== 'PHP' && ` Rates are set in Philippine pesos; ${currency.name} figures are indicative and billed at the peso rate.`}
         </p>
       </section>
 
@@ -389,7 +442,23 @@ const Rates: React.FC = () => {
               Zeal Rates<span className="text-[#f97316]">.</span>
             </h1>
           </div>
-          <Label>PHP · valid 90 days</Label>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2">
+              <span className="sr-only">Currency</span>
+              <select
+                value={currencyCode}
+                onChange={(e) => setCurrencyCode(e.target.value as CurrencyCode)}
+                className="cursor-pointer rounded-md border border-[#e7e4dc] bg-white px-2 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-[#333] transition-colors hover:border-[#f97316] focus:border-[#f97316] focus:outline-none"
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.symbol} {c.code}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Label>valid 90 days</Label>
+          </div>
         </header>
 
         <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
