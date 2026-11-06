@@ -14,6 +14,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 type Medium = 'realistic' | 'animated'
 type Runtime = 60 | 90 | 120
 type Tab = 'trailers' | 'websites'
+type Category = 'ai' | 'ads' | 'promo'
 
 const TRAILER: Record<Medium, { label: string; blurb: string; price: Record<Runtime, number> }> = {
   realistic: {
@@ -27,6 +28,90 @@ const TRAILER: Record<Medium, { label: string; blurb: string; price: Record<Runt
     price: { 60: 4000, 90: 6000, 120: 7500 },
   },
 }
+
+/**
+ * Standard rate card, priced natively in US dollars. The page works in PHP, so
+ * these are held as PHP at the same peg the USD switcher uses and convert back
+ * to the exact card figures.
+ */
+const USD_PEG = 0.017
+
+interface CardAddOn {
+  id: string
+  label: string
+  basis: string
+  /** USD price for an under 1, 2 and 3 minute video. */
+  usd?: [number, number, number]
+  /** Percentage of the package price, charged instead of a fixed price. */
+  percent?: number
+  /** Quantity unit shown in the stepper; omit for a single yes/no line. */
+  unit?: string
+}
+
+interface CardCategory {
+  id: 'ads' | 'promo'
+  label: string
+  /** Short name, used to tell apart the same add-on across categories. */
+  short: string
+  addOns: CardAddOn[]
+  format: string
+  blurb: string
+  includes: string
+  tiers: { minutes: 1 | 2 | 3; usd: number }[]
+}
+
+const RATE_CARD: CardCategory[] = [
+  {
+    id: 'ads',
+    label: 'Video ads & sizzle reels',
+    short: 'Video ad',
+    addOns: [
+      { id: 'script', label: 'Script writing', basis: 'Per video, by length', usd: [20, 35, 50], unit: 'scripts' },
+      { id: 'revision', label: 'Extra revision round', basis: 'Per round, by length', usd: [15, 30, 50], unit: 'rounds' },
+      { id: 'format', label: 'Extra format (16:9 or 1:1)', basis: 'Per format, by length', usd: [20, 40, 60], unit: 'formats' },
+      { id: 'captions', label: 'Second-language captions', basis: 'Per language, by length', usd: [15, 30, 45], unit: 'languages' },
+      { id: 'music', label: 'Licensed music', basis: 'Per track, commercial licence', usd: [20, 20, 20], unit: 'tracks' },
+      { id: 'template', label: 'Custom branded template', basis: 'One-off, reusable on later videos', usd: [50, 50, 50] },
+      { id: 'rush', label: 'Rush delivery', basis: 'On the package price', percent: 50 },
+    ],
+    format: 'Vertical 9:16',
+    blurb: 'Short-form with minimal motion graphics.',
+    includes: 'Client-supplied footage, captions, our existing template and 1 revision round.',
+    tiers: [
+      { minutes: 1, usd: 60 },
+      { minutes: 2, usd: 130 },
+      { minutes: 3, usd: 200 },
+    ],
+  },
+  {
+    id: 'promo',
+    label: 'Brand promo videos',
+    short: 'Brand promo',
+    addOns: [
+      { id: 'script', label: 'Script writing', basis: 'Per video, by length', usd: [50, 80, 110], unit: 'scripts' },
+      { id: 'revision', label: 'Extra revision round', basis: 'Per round, by length', usd: [50, 90, 130], unit: 'rounds' },
+      { id: 'format', label: 'Extra format (9:16 or 1:1)', basis: 'Per format, by length', usd: [70, 120, 180], unit: 'formats' },
+      { id: 'captions', label: 'Captions', basis: 'Per language, by length', usd: [20, 40, 60], unit: 'languages' },
+      { id: 'music', label: 'Licensed music', basis: 'Per track, commercial licence', usd: [20, 20, 20], unit: 'tracks' },
+      { id: 'logo', label: 'Animated logo sting', basis: 'One-off, reusable on later videos', usd: [60, 60, 60] },
+      { id: 'rush', label: 'Rush delivery', basis: 'On the package price', percent: 50 },
+    ],
+    format: 'Horizontal 16:9',
+    blurb: 'Custom motion graphics.',
+    includes: 'Custom motion graphics, animated text, branded design and 1 revision round.',
+    tiers: [
+      { minutes: 1, usd: 200 },
+      { minutes: 2, usd: 350 },
+      { minutes: 3, usd: 500 },
+    ],
+  },
+]
+
+const CARD_NOTES = [
+  'Videos over 3 minutes and more complex projects are quoted separately.',
+  'Add-ons are priced by the length of the video and confirmed in writing before production continues.',
+  'Payment: 50% to start and 50% before final delivery.',
+]
 
 const INCLUDED = [
   'Storyboard with three revision rounds',
@@ -155,8 +240,9 @@ const CURRENCIES: Currency[] = [
  * figure, so add-ons stay precise while packages land on round numbers.
  */
 const convert = (php: number, c: Currency) => {
-  if (c.code === 'PHP') return php
-  const raw = php * c.rate
+  if (c.code === 'PHP') return Math.round(php / 10) * 10
+  // Round to the cent first so float noise never tips a figure into the next step.
+  const raw = Math.round(php * c.rate * 100) / 100
   const step = raw >= 500 ? c.step * 20 : raw >= 200 ? c.step * 10 : raw >= 50 ? c.step * 2 : c.step
   return Math.ceil(raw / step) * step
 }
@@ -284,6 +370,12 @@ interface Line {
   amount: number
 }
 
+interface CardPick {
+  tier: number
+  qty: number
+  addOns: Record<string, number>
+}
+
 const Rates: React.FC = () => {
   // Trailer
   const [medium, setMedium] = useState<Medium | null>(null)
@@ -291,6 +383,9 @@ const Rates: React.FC = () => {
   const [videos, setVideos] = useState(1)
   const [addOns, setAddOns] = useState<Record<string, number>>({})
   const [rush, setRush] = useState(false)
+  const [category, setCategory] = useState<Category>('ai')
+  // Rate card picks, keyed by category id: the chosen length and a video count.
+  const [cards, setCards] = useState<Record<string, CardPick>>({})
 
   // Website
   const [site, setSite] = useState<string | null>(null)
@@ -312,6 +407,8 @@ const Rates: React.FC = () => {
   })
   const currency = CURRENCIES.find((c) => c.code === currencyCode) ?? CURRENCIES[0]
   const peso = (n: number) => format(n, currency)
+  /** Format a figure that is already in the selected currency. */
+  const money = (n: number) => `${currency.symbol}${n.toLocaleString(currency.locale)}`
 
   // Only remember a deliberate choice, so detection stays live until then.
   useEffect(() => {
@@ -354,6 +451,29 @@ const Rates: React.FC = () => {
       })
     }
 
+    for (const cat of RATE_CARD) {
+      const pick = cards[cat.id]
+      const tier = pick && cat.tiers.find((t) => t.minutes === pick.tier)
+      if (!pick || !tier) continue
+      const unit = tier.usd / USD_PEG
+      lines.push({
+        label: `${cat.label} · under ${tier.minutes} min`,
+        detail: `${pick.qty} × ${peso(unit)} · ${cat.format}`,
+        amount: unit * pick.qty,
+      })
+      for (const a of cat.addOns) {
+        const count = pick.addOns[a.id]
+        if (!count) continue
+        const label = `${a.label} · ${cat.short}`
+        if (a.percent) {
+          lines.push({ label, detail: `+${a.percent}% on the package price`, amount: unit * pick.qty * (a.percent / 100) })
+        } else if (a.usd) {
+          const price = a.usd[tier.minutes - 1] / USD_PEG
+          lines.push({ label, detail: count > 1 ? `${count} × ${peso(price)}` : a.basis, amount: price * count })
+        }
+      }
+    }
+
     for (const a of ADD_ONS) {
       const qty = addOns[a.id]
       if (!qty) continue
@@ -375,10 +495,13 @@ const Rates: React.FC = () => {
       lines.push({ label: 'Maintenance', detail: `${maintenanceMonths} month${maintenanceMonths > 1 ? 's' : ''} × ${peso(MAINTENANCE)}`, amount: MAINTENANCE * maintenanceMonths })
     }
 
-    const total = lines.reduce((s, l) => s + l.amount, 0)
+    // Sum what each line shows, so converted lines always add up to the total.
+    const total = lines.reduce((s, l) => s + convert(l.amount, currency), 0)
     const hasFrom = Boolean(pkg?.from)
     return { lines, total, hasFrom }
-  }, [medium, runtime, videos, addOns, rush, site, extraPages, maintenanceMonths, currency])
+  }, [medium, runtime, videos, addOns, rush, cards, site, extraPages, maintenanceMonths, currency])
+
+  const hasCards = Object.keys(cards).length > 0
 
   const reset = () => {
     setMedium(null)
@@ -386,6 +509,7 @@ const Rates: React.FC = () => {
     setVideos(1)
     setAddOns({})
     setRush(false)
+    setCards({})
     setSite(null)
     setExtraPages(0)
     setMaintenanceMonths(0)
@@ -395,7 +519,7 @@ const Rates: React.FC = () => {
     const text = [
       'QUOTE SUMMARY',
       ...quote.lines.map((l) => `${l.label}${l.detail ? ` (${l.detail})` : ''}: ${peso(l.amount)}`),
-      `TOTAL${quote.hasFrom ? ' (from)' : ''}: ${peso(quote.total)}`,
+      `TOTAL${quote.hasFrom ? ' (from)' : ''}: ${money(quote.total)}`,
       '',
       `Rates in ${currency.name}. Website store package is a starting price.`,
     ].join('\n')
@@ -458,7 +582,7 @@ const Rates: React.FC = () => {
               ))}
               <tr className="border-t-2 border-[#111]">
                 <td className="pt-3 text-[10px] uppercase tracking-[0.2em] text-[#666]">Total{quote.hasFrom ? ' · from' : ''}</td>
-                <td className="pt-3 text-right font-display text-2xl tabular-nums">{peso(quote.total)}</td>
+                <td className="pt-3 text-right font-display text-2xl tabular-nums">{money(quote.total)}</td>
               </tr>
             </tbody>
           </table>
@@ -475,6 +599,13 @@ const Rates: React.FC = () => {
           </div>
         )}
 
+        {RATE_CARD.filter((c) => cards[c.id]).map((c) => (
+          <div key={c.id} className="mt-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">{c.label} · {c.format}</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-[#333]">Includes: {c.includes}</p>
+          </div>
+        ))}
+
         {site && (
           <div className="mt-8">
             <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Website process</p>
@@ -488,22 +619,37 @@ const Rates: React.FC = () => {
           </div>
         )}
 
-        <div className="mt-8">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Terms</p>
-          <dl className="mt-2 text-[11px] leading-relaxed text-[#333]">
-            {TERMS.map(([k, v]) => (
-              <div key={k} className="flex gap-3 py-0.5">
-                <dt className="w-40 shrink-0 text-[#888]">{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+        {/* A rate card quote carries its own terms, not the AI ads volume terms. */}
+        {(medium || site || !hasCards) && (
+          <div className="mt-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">Terms</p>
+            <dl className="mt-2 text-[11px] leading-relaxed text-[#333]">
+              {TERMS.map(([k, v]) => (
+                <div key={k} className="flex gap-3 py-0.5">
+                  <dt className="w-40 shrink-0 text-[#888]">{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+
+        {hasCards && (
+          <div className="mt-8">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#888]">{medium || site ? 'Video ads and brand promos' : 'Terms'}</p>
+            <ul className="mt-2 space-y-0.5 text-[11px] leading-relaxed text-[#333]">
+              {CARD_NOTES.map((n) => (
+                <li key={n}>· {n}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <p className="mt-8 border-t border-[#eee] pt-3 text-[10px] leading-relaxed text-[#888]">
           All figures are standing rates, not estimates. Add-ons are confirmed in writing before production continues. Website
           store packages are quoted from a starting price.
-          {currency.code !== 'PHP' && ` Rates are set in Philippine pesos; ${currency.name} figures are indicative and billed at the peso rate.`}
+          {currency.code !== 'PHP' && (medium || site || !hasCards) && ` Rates are set in Philippine pesos; ${currency.name} figures are indicative and billed at the peso rate.`}
+          {currency.code !== 'USD' && hasCards && ` Video ads and brand promos are set in US dollars; ${currency.name} figures are indicative.`}
         </p>
       </section>
 
@@ -559,6 +705,131 @@ const Rates: React.FC = () => {
             <div className="min-h-0 flex-1 overflow-y-auto p-4">
               {tab === 'trailers' ? (
                 <>
+                  {/* Category */}
+                  <div className="mb-3 flex flex-wrap gap-1">
+                    {([['ai', 'AI ads'], ['ads', 'Video ads & sizzle reels'], ['promo', 'Brand promos']] as [Category, string][]).map(([id, label]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setCategory(id)}
+                        aria-pressed={category === id}
+                        className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                          category === id ? 'border-[#f97316] bg-[#fff6ee] text-[#111]' : 'border-[#e7e4dc] text-[#666] hover:border-[#999]'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {category !== 'ai' ? (
+                    RATE_CARD.filter((c) => c.id === category).map((cat) => {
+                      const pick = cards[cat.id]
+                      return (
+                        <div key={cat.id}>
+                          <p className="text-xs font-medium text-[#222]">
+                            {cat.label} <span className="font-normal text-[#999]">· {cat.format} · {cat.blurb}</span>
+                          </p>
+                          <div className="mt-2 grid grid-cols-3 gap-2">
+                            {cat.tiers.map((t) => {
+                              const on = pick?.tier === t.minutes
+                              return (
+                                <button
+                                  key={t.minutes}
+                                  type="button"
+                                  onClick={() =>
+                                    setCards((prev) => {
+                                      const next = { ...prev }
+                                      if (on) delete next[cat.id]
+                                      else next[cat.id] = { tier: t.minutes, qty: prev[cat.id]?.qty ?? 1, addOns: prev[cat.id]?.addOns ?? {} }
+                                      return next
+                                    })
+                                  }
+                                  aria-pressed={on}
+                                  className={`rounded-lg border p-3 text-center transition-colors ${
+                                    on ? 'border-[#f97316] bg-[#fff6ee]' : 'border-[#e7e4dc] hover:border-[#999]'
+                                  }`}
+                                >
+                                  <span className="block text-[11px] text-[#777]">Under {t.minutes} minute{t.minutes > 1 ? 's' : ''}</span>
+                                  <span className="mt-1 block text-lg font-semibold tabular-nums">{peso(t.usd / USD_PEG)}</span>
+                                </button>
+                              )
+                            })}
+                          </div>
+                          {pick && (
+                            <div className="mt-3 flex items-center justify-end gap-2">
+                              <Label>Videos</Label>
+                              <Stepper
+                                value={pick.qty}
+                                min={1}
+                                onChange={(n) => setCards((prev) => ({ ...prev, [cat.id]: { ...pick, qty: n } }))}
+                                label="videos"
+                              />
+                            </div>
+                          )}
+                          <p className="mt-3 text-[11px] leading-snug text-[#666]">
+                            <span className="font-medium text-[#222]">Includes:</span> {cat.includes}
+                          </p>
+                          <Label className="mt-4">Add-ons{pick ? '' : ' · pick a length to add these'}</Label>
+                          <ul className="mt-1.5 grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+                            {cat.addOns.map((a) => {
+                              const count = pick?.addOns[a.id] ?? 0
+                              const on = count > 0
+                              const setCount = (n: number) => {
+                                setCards((prev) => {
+                                  const current = prev[cat.id]
+                                  if (!current) return prev
+                                  const addOns = { ...current.addOns }
+                                  if (n <= 0) delete addOns[a.id]
+                                  else addOns[a.id] = n
+                                  return { ...prev, [cat.id]: { ...current, addOns } }
+                                })
+                              }
+                              const varies = a.usd && a.usd[0] !== a.usd[2]
+                              return (
+                                <li key={a.id} className="flex items-center gap-2 border-t border-[#f0ede6] py-1.5">
+                                  <button
+                                    type="button"
+                                    disabled={!pick}
+                                    onClick={() => setCount(on ? 0 : 1)}
+                                    aria-pressed={on}
+                                    className="flex min-w-0 flex-1 items-center gap-2 text-left disabled:cursor-not-allowed disabled:opacity-60"
+                                  >
+                                    <Check on={on} />
+                                    <span className="min-w-0">
+                                      <span className="block truncate text-xs text-[#222]">{a.label}</span>
+                                      <span className="block text-[10px] text-[#999]">{a.basis}</span>
+                                    </span>
+                                  </button>
+                                  {a.unit && on && <Stepper value={count} onChange={setCount} label={a.unit} />}
+                                  <span className="w-16 shrink-0 text-right text-xs font-semibold tabular-nums">
+                                    {a.percent ? (
+                                      `+${a.percent}%`
+                                    ) : (
+                                      <>
+                                        {!pick && varies && <span className="mr-1 text-[10px] font-normal text-[#999]">from</span>}
+                                        {peso((a.usd as [number, number, number])[(pick?.tier ?? 1) - 1] / USD_PEG)}
+                                      </>
+                                    )}
+                                  </span>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                          <div className="mt-3">
+                            <Fold title="Good to know">
+                              <ul className="space-y-1">
+                                {CARD_NOTES.map((n) => (
+                                  <li key={n}>· {n}</li>
+                                ))}
+                              </ul>
+                            </Fold>
+                          </div>
+                        </div>
+                      )
+                    })
+                  ) : (
+                  <>
                   {/* Medium */}
                   <div className="grid grid-cols-2 gap-2">
                     {(Object.keys(TRAILER) as Medium[]).map((m) => {
@@ -696,6 +967,8 @@ const Rates: React.FC = () => {
                       </p>
                     </Fold>
                   </div>
+                  </>
+                  )}
                 </>
               ) : (
                 <>
@@ -798,7 +1071,7 @@ const Rates: React.FC = () => {
             <div className="mt-3 border-t border-[#e7e4dc] pt-3">
               <div className="flex items-baseline justify-between">
                 <Label className="text-[#666]">Total{quote.hasFrom ? ' · from' : ''}</Label>
-                <p className="font-display text-2xl tabular-nums">{peso(quote.total)}</p>
+                <p className="font-display text-2xl tabular-nums">{money(quote.total)}</p>
               </div>
               {medium && <p className="mt-1.5 text-[10px] leading-snug text-[#999]">Rate holds for four or more videos a month, or a six-video batch. 50% deposit per batch.</p>}
               <div className="mt-3 grid grid-cols-2 gap-2">
@@ -824,7 +1097,7 @@ const Rates: React.FC = () => {
         <a href="#quote" className="fixed inset-x-4 bottom-4 z-50 flex items-center justify-between rounded-lg border border-[#e7e4dc] bg-white/95 px-4 py-2.5 shadow-lg backdrop-blur lg:hidden">
           <Label className="text-[#666]">Total{quote.hasFrom ? ' · from' : ''}</Label>
           <span className="flex items-center gap-3">
-            <span className="font-display text-lg tabular-nums">{peso(quote.total)}</span>
+            <span className="font-display text-lg tabular-nums">{money(quote.total)}</span>
             <span className="text-[11px] text-[#f97316]">View ↓</span>
           </span>
         </a>

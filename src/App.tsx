@@ -30,12 +30,14 @@ const webLandingElement = (
   </Suspense>
 )
 
+const isRatesPath = (pathname: string) => pathname === '/rates' || pathname === '/rate'
+
 const PUBLIC_LOADER_MS = 1750
 
 function AppContent() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
-  const isInternal = isAdmin || location.pathname === '/rates';
+  const isInternal = isAdmin || isRatesPath(location.pathname);
   const hideChrome = isInternal || isWebLandingPath(location.pathname);
   
   useEffect(() => {
@@ -62,6 +64,7 @@ function AppContent() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/web/*" element={webLandingElement} />
+        <Route path="/rate" element={<Navigate to="/rates" replace />} />
         <Route
           path="/rates"
           element={
@@ -88,7 +91,7 @@ function AppContent() {
 function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
-  const isInternal = isAdmin || location.pathname === '/rates';
+  const isInternal = isAdmin || isRatesPath(location.pathname);
   // The Zeal Dev landing keeps the cream public styling but skips the loader.
   const skipLoader = isInternal || isWebLandingPath(location.pathname);
   const [isLoading, setIsLoading] = useState(() => {
