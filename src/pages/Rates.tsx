@@ -209,9 +209,13 @@ const EXTRA_PAGE = 2500
 // ---------------------------------------------------------------------------
 
 /**
- * Currencies. All rates are authored in PHP; other currencies are converted
- * at a fixed indicative rate and rounded so quotes stay legible. Update
- * `rate` when the board agrees a new conversion.
+ * Currencies. All rates are authored in PHP and quoted first in US dollars
+ * (USD_PEG, rounded up to clean figures). Every other currency is worked out
+ * from that dollar figure at a market cross rate, so a quote in AUD, EUR, GBP
+ * or SGD always matches the USD price at today's exchange rate.
+ *
+ * `perUsd` is mid-market, checked 16 Nov 2026 (BSP reference and Google).
+ * Update it when rates move noticeably.
  */
 type CurrencyCode = 'PHP' | 'USD' | 'EUR' | 'AUD' | 'GBP' | 'SGD'
 
@@ -219,32 +223,42 @@ interface Currency {
   code: CurrencyCode
   symbol: string
   name: string
-  /** Units of this currency per 1 PHP. */
-  rate: number
-  /** Round converted amounts up to this step. */
-  step: number
+  /** Units of this currency per 1 US dollar. */
+  perUsd: number
   locale: string
 }
 
 const CURRENCIES: Currency[] = [
-  { code: 'PHP', symbol: '₱', name: 'Philippine pesos', rate: 1, step: 1, locale: 'en-PH' },
-  { code: 'USD', symbol: '$', name: 'US dollars', rate: 0.017, step: 5, locale: 'en-US' },
-  { code: 'EUR', symbol: '€', name: 'euros', rate: 0.016, step: 5, locale: 'en-IE' },
-  { code: 'GBP', symbol: '£', name: 'pounds sterling', rate: 0.013, step: 5, locale: 'en-GB' },
-  { code: 'AUD', symbol: 'A$', name: 'Australian dollars', rate: 0.026, step: 5, locale: 'en-AU' },
-  { code: 'SGD', symbol: 'S$', name: 'Singapore dollars', rate: 0.023, step: 5, locale: 'en-SG' },
+  { code: 'PHP', symbol: '₱', name: 'Philippine pesos', perUsd: 1 / USD_PEG, locale: 'en-PH' },
+  { code: 'USD', symbol: '$', name: 'US dollars', perUsd: 1, locale: 'en-US' },
+  { code: 'EUR', symbol: '€', name: 'euros', perUsd: 0.905, locale: 'en-IE' },
+  { code: 'GBP', symbol: '£', name: 'pounds sterling', perUsd: 0.756, locale: 'en-GB' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian dollars', perUsd: 1.48, locale: 'en-AU' },
+  { code: 'SGD', symbol: 'S$', name: 'Singapore dollars', perUsd: 1.286, locale: 'en-SG' },
 ]
 
 /**
- * Convert a PHP amount into `c`, rounding up to a step that grows with the
- * figure, so add-ons stay precise while packages land on round numbers.
+ * The US dollar price of a PHP amount, rounded up to a step that grows with
+ * the figure so add-ons stay precise while packages land on round numbers.
+ */
+const toUsd = (php: number) => {
+  // Round to the cent first so float noise never tips a figure into the next step.
+  const raw = Math.round(php * USD_PEG * 100) / 100
+  const step = raw >= 500 ? 100 : raw >= 200 ? 50 : raw >= 50 ? 10 : 5
+  return Math.ceil(raw / step) * step
+}
+
+/**
+ * Convert a PHP amount into `c`. Non-dollar currencies start from the USD
+ * price and round to the nearest step, so they track it closely.
  */
 const convert = (php: number, c: Currency) => {
   if (c.code === 'PHP') return Math.round(php / 10) * 10
-  // Round to the cent first so float noise never tips a figure into the next step.
-  const raw = Math.round(php * c.rate * 100) / 100
-  const step = raw >= 500 ? c.step * 20 : raw >= 200 ? c.step * 10 : raw >= 50 ? c.step * 2 : c.step
-  return Math.ceil(raw / step) * step
+  const usd = toUsd(php)
+  if (c.code === 'USD') return usd
+  const raw = usd * c.perUsd
+  const step = raw >= 100 ? 10 : 5
+  return Math.round(raw / step) * step
 }
 
 const format = (php: number, c: Currency) => `${c.symbol}${convert(php, c).toLocaleString(c.locale)}`
